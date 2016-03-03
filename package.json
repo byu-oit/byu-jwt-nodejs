@@ -1,0 +1,13 @@
+{
+  "name": "byu-jwt",
+  "version": "0.0.3",
+  "description": "The `byu-jwt` module provides helpful functions to retrieve a specified BYU `.well-known` URL and verify BYU signed JWTs.",
+  "main": "index.js",
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "bluebird": "^3.3.1",
+    "jsonwebtoken": "^5.7.0",
+    "pem": "^1.8.1"
+  }
+}
