@@ -47,7 +47,7 @@ exports.verifyJWT = function (jwt, wellKnownURL) {
       return promised_request(options);
     })
     .then(function (result) {
-        var keys = JSON.parse(result[1]).keys;
+        var keys = JSON.parse(result.body).keys;
         var cert = keys[0].x5c[0];
 
         //format cert
