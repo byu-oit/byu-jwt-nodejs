@@ -6,7 +6,7 @@ The *byu-jwt* module provides helpful functions to retrieve a specified BYU *.we
 * verifyJWT
 
 ## getWellKnown(wellKnownURL)
-getWellKnown retrieves the response of the specified *.well-known* URL and if *cachWellKnowns* is set to *true* returns the previously retrieved response in the form of a promise.
+getWellKnown retrieves the response of the specified *.well-known* URL and if *cacheWellKnowns* is set to *true* returns the previously retrieved response in the form of a promise.
 
 ## verifyJWT(jwt, wellKnownURL)
 verifyJWT uses the URLs and values found from the specified *.well-known* URL to verify and decode the provided signed JWT.
