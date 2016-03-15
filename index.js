@@ -32,71 +32,49 @@ exports.getWellKnown = function(wellKnownURL) {
 
 // Just return the public key.
 exports.getPublicKey = function(wellKnownURL) {
-return exports.getWellKnown(wellKnownURL)
+  return exports.getWellKnown(wellKnownURL)
     .then(function (result) {
-
-      var openid_configuration = result;
-      var jwks_uri = openid_configuration["jwks_uri"];
-      algorithms = openid_configuration["id_token_signing_alg_values_supported"];
-
-      var options = {
-        url: jwks_uri,
-        method: 'GET'
-      };
-
-      return promised_request(options);
-    })
-    .then(function (result) {
-        var keys = JSON.parse(result.body).keys;
-        var cert = keys[0].x5c[0];
-
-        //format cert
-        cert = cert.replace(/(.{64})/g, "$1\n");
-        var prefix = "-----BEGIN CERTIFICATE-----\n";
-        var postfix = "\n-----END CERTIFICATE-----";
-        cert = prefix + cert + postfix;
-
-        //extract public key
-        return promisedGetPublicKey(cert);
+        return getPublicKeyUtil(result);
       }
     );
 };
+
+function getPublicKeyUtil(wellKnownResult) {
+  var openid_configuration = wellKnownResult;
+  var jwks_uri = openid_configuration["jwks_uri"];
+  algorithms = openid_configuration["id_token_signing_alg_values_supported"];
+
+  var options = {
+    url: jwks_uri,
+    method: 'GET'
+  };
+
+  return promised_request(options)
+    .then(function (result) {
+      var keys = JSON.parse(result.body).keys;
+      var cert = keys[0].x5c[0];
+
+      //format cert
+      cert = cert.replace(/(.{64})/g, "$1\n");
+      var prefix = "-----BEGIN CERTIFICATE-----\n";
+      var postfix = "\n-----END CERTIFICATE-----";
+      cert = prefix + cert + postfix;
+
+      //extract public key
+      return promisedGetPublicKey(cert);
+    });
+}
 
 exports.verifyJWT = function (jwt, wellKnownURL) {
   var algorithms;
   return exports.getWellKnown(wellKnownURL)
     .then(function (result) {
+      return getPublicKeyUtil(result)
+        .then(function (result) {
+          var key = result.publicKey;
 
-      var openid_configuration = result;
-      var jwks_uri = openid_configuration["jwks_uri"];
-      algorithms = openid_configuration["id_token_signing_alg_values_supported"];
-
-      var options = {
-        url: jwks_uri,
-        method: 'GET'
-      };
-
-      return promised_request(options);
-    })
-    .then(function (result) {
-        var keys = JSON.parse(result.body).keys;
-        var cert = keys[0].x5c[0];
-
-        //format cert
-        cert = cert.replace(/(.{64})/g, "$1\n");
-        var prefix = "-----BEGIN CERTIFICATE-----\n";
-        var postfix = "\n-----END CERTIFICATE-----";
-        cert = prefix + cert + postfix;
-
-        //extract public key
-        return promisedGetPublicKey(cert);
-      }
-    )
-    .then(function (result) {
-        var key = result.publicKey;
-
-        //verify jwt and returns decoded jwt
-        return jsonwebtoken.verify(jwt, key, {algorithms: algorithms});
-      }
-    );
+          //verify jwt and returns decoded jwt
+          return jsonwebtoken.verify(jwt, key, {algorithms: algorithms});
+        });
+    });
 };
