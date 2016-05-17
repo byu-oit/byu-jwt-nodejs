@@ -6,6 +6,7 @@ The *byu-jwt* module provides helpful functions to retrieve a specified BYU *.we
 * getPublicKey
 * verifyJWT
 * getPublicKeyUtil
+* jwtDecoded
 
 ## getWellKnown(wellKnownURL)
 getWellKnown retrieves the response of the specified *.well-known* URL and if *cacheWellKnowns* is set to *true* returns the previously retrieved response in the form of a promise.
@@ -21,3 +22,6 @@ cacheWellknowns is a boolean variable provided to set whether to cache the respo
 
 ## getPublicKeyUtil(resultFromGetWellKnown)
 getPublicKeyUtil is a private reusable function the takes the result from a getWellKnown request and does the actual work of PEM formatting the X509 certificate
+
+## jwtDecoded(jwt, wellKnownURL)
+wraps verifyJWT and returns an object with properties set to the decoded jwt values.
