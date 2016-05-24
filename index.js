@@ -111,55 +111,62 @@ exports.jwtDecoded = function (jwt, wellKnownURL)
     return exports.verifyJWT(jwt, wellKnownURL)
         .then(function (jwtDecoded)
         {
+            const hasResourceOwner = typeof jwtDecoded['http://byu.edu/claims/resourceowner_byu_id'] !== "undefined";
+
             jwtDecoded.byu={};
-            jwtDecoded.byu.client_byu_id               = jwtDecoded['http://byu.edu/claims/client_byu_id'               ];
-            jwtDecoded.byu.client_claim_source         = jwtDecoded['http://byu.edu/claims/client_claim_source'         ];
-            jwtDecoded.byu.client_name_prefix          = jwtDecoded['http://byu.edu/claims/client_name_prefix'          ];
-            jwtDecoded.byu.client_name_suffix          = jwtDecoded['http://byu.edu/claims/client_name_suffix'          ];
-            jwtDecoded.byu.client_net_id               = jwtDecoded['http://byu.edu/claims/client_net_id'               ];
-            jwtDecoded.byu.client_person_id            = jwtDecoded['http://byu.edu/claims/client_person_id'            ];
-            jwtDecoded.byu.client_preferred_first_name = jwtDecoded['http://byu.edu/claims/client_preferred_first_name' ];
-            jwtDecoded.byu.client_rest_of_name         = jwtDecoded['http://byu.edu/claims/client_rest_of_name'         ];
-            jwtDecoded.byu.client_sort_name            = jwtDecoded['http://byu.edu/claims/client_sort_name'            ];
-            jwtDecoded.byu.client_subscriber_net_id    = jwtDecoded['http://byu.edu/claims/client_subscriber_net_id'    ];
-            jwtDecoded.byu.client_surname              = jwtDecoded['http://byu.edu/claims/client_surname'              ];
-            jwtDecoded.byu.client_surname_position     = jwtDecoded['http://byu.edu/claims/client_surname_position'     ];
-            if(typeof jwtDecoded['http://byu.edu/claims/resourceowner_byu_id'] !== "undefined")
-            {
-                jwtDecoded.byu.resourceowner_byu_id              =jwtDecoded['http://byu.edu/claims/resourceowner_byu_id'               ];
-                jwtDecoded.byu.resourceowner_net_id              =jwtDecoded['http://byu.edu/claims/resourceowner_net_id'               ];
-                jwtDecoded.byu.resourceowner_person_id           =jwtDecoded['http://byu.edu/claims/resourceowner_person_id'            ];
-                jwtDecoded.byu.resourceowner_preferred_first_name=jwtDecoded['http://byu.edu/claims/resourceowner_preferred_first_name' ];
-                jwtDecoded.byu.resourceowner_prefix              =jwtDecoded['http://byu.edu/claims/resourceowner_prefix'               ];
-                jwtDecoded.byu.resourceowner_rest_of_name        =jwtDecoded['http://byu.edu/claims/resourceowner_rest_of_name'         ];
-                jwtDecoded.byu.resourceowner_sort_name           =jwtDecoded['http://byu.edu/claims/resourceowner_sort_name'            ];
-                jwtDecoded.byu.resourceowner_suffix              =jwtDecoded['http://byu.edu/claims/resourceowner_suffix'               ];
-                jwtDecoded.byu.resourceowner_surname             =jwtDecoded['http://byu.edu/claims/resourceowner_surname'              ];
-                jwtDecoded.byu.resourceowner_surname_position    =jwtDecoded['http://byu.edu/claims/resourceowner_surname_position'     ];
-                jwtDecoded.byu.webres_check_byu_id    = jwtDecoded.byu.resourceowner_byu_id;
-                jwtDecoded.byu.webres_check_net_id    = jwtDecoded.byu.resourceowner_net_id;
-                jwtDecoded.byu.webres_check_person_id = jwtDecoded.byu.resourceowner_person_id;
+
+            jwtDecoded.byu.client = {
+                byuId:              jwtDecoded['http://byu.edu/claims/client_byu_id'],
+                claimSource:        jwtDecoded['http://byu.edu/claims/client_claim_source'],
+                netId:              jwtDecoded['http://byu.edu/claims/client_net_id'],
+                personId:           jwtDecoded['http://byu.edu/claims/client_person_id'],
+                preferredFirstName: jwtDecoded['http://byu.edu/claims/client_preferred_first_name'],
+                prefix:             jwtDecoded['http://byu.edu/claims/client_name_prefix'],
+                restOfName:         jwtDecoded['http://byu.edu/claims/client_rest_of_name'],
+                sortName:           jwtDecoded['http://byu.edu/claims/client_sort_name'],
+                subscriberNetId:    jwtDecoded['http://byu.edu/claims/client_subscriber_net_id'],
+                suffix:             jwtDecoded['http://byu.edu/claims/client_name_prefix'],
+                surname:            jwtDecoded['http://byu.edu/claims/client_surname'],
+                surnamePosition:    jwtDecoded['http://byu.edu/claims/client_surname_position']
+            };
+
+            if (hasResourceOwner) {
+                jwtDecoded.byu.resourceOwner = {
+                    byuId:              jwtDecoded['http://byu.edu/claims/resourceowner_byu_id'],
+                    netId:              jwtDecoded['http://byu.edu/claims/resourceowner_net_id'],
+                    personId:           jwtDecoded['http://byu.edu/claims/resourceowner_person_id'],
+                    preferredFirstName: jwtDecoded['http://byu.edu/claims/resourceowner_preferred_first_name'],
+                    prefix:             jwtDecoded['http://byu.edu/claims/resourceowner_prefix'],
+                    restOfName:         jwtDecoded['http://byu.edu/claims/resourceowner_rest_of_name'],
+                    sortName:           jwtDecoded['http://byu.edu/claims/resourceowner_sort_name'],
+                    suffix:             jwtDecoded['http://byu.edu/claims/resourceowner_suffix'],
+                    surname:            jwtDecoded['http://byu.edu/claims/resourceowner_surname'],
+                    surnamePosition:    jwtDecoded['http://byu.edu/claims/resourceowner_surname_position']
+                };
             }
-            else
-            {
-                jwtDecoded.byu.webres_check_byu_id    = jwtDecoded.byu.client_byu_id;
-                jwtDecoded.byu.webres_check_net_id    = jwtDecoded.byu.client_net_id;
-                jwtDecoded.byu.webres_check_person_id = jwtDecoded.byu.client_person_id;
-            }
-            jwtDecoded.wso2=
-            {
-                apicontext      :jwtDecoded["http://wso2.org/claims/apicontext"      ],
-                applicationid   :jwtDecoded["http://wso2.org/claims/applicationid"   ],
-                applicationname :jwtDecoded["http://wso2.org/claims/applicationname" ],
-                applicationtier :jwtDecoded["http://wso2.org/claims/applicationtier" ],
-                client_id       :jwtDecoded["http://wso2.org/claims/client_id"       ],
-                enduser         :jwtDecoded["http://wso2.org/claims/enduser"         ],
-                enduserTenantId :jwtDecoded["http://wso2.org/claims/enduserTenantId" ],
-                keytype         :jwtDecoded["http://wso2.org/claims/keytype"         ],
-                subscriber      :jwtDecoded["http://wso2.org/claims/subscriber"      ],
-                tier            :jwtDecoded["http://wso2.org/claims/tier"            ],
-                usertype        :jwtDecoded["http://wso2.org/claims/usertype"        ],
-                version         :jwtDecoded["http://wso2.org/claims/version"         ]
+
+            const webresCheckKey = hasResourceOwner ? 'resourceOwner' : 'client';
+            jwtDecoded.byu.webresCheck = {
+                byuId: jwtDecoded.byu[webresCheckKey].byuId,
+                netId: jwtDecoded.byu[webresCheckKey].netId,
+                personId: jwtDecoded.byu[webresCheckKey].personId
+            };
+
+            jwtDecoded.wso2 = {
+                apiContext:         jwtDecoded["http://wso2.org/claims/apicontext"],
+                application: {
+                    id:             jwtDecoded["http://wso2.org/claims/applicationid"],
+                    name:           jwtDecoded["http://wso2.org/claims/applicationname"],
+                    tier:           jwtDecoded["http://wso2.org/claims/applicationtier"]
+                },
+                clientId:           jwtDecoded["http://wso2.org/claims/client_id"],
+                endUser:            jwtDecoded["http://wso2.org/claims/enduser"],
+                endUserTenantId:    jwtDecoded["http://wso2.org/claims/enduserTenantId"],
+                keyType:            jwtDecoded["http://wso2.org/claims/keytype"],
+                subscriber:         jwtDecoded["http://wso2.org/claims/subscriber"],
+                tier:               jwtDecoded["http://wso2.org/claims/tier"],
+                userType:           jwtDecoded["http://wso2.org/claims/usertype"],
+                version:            jwtDecoded["http://wso2.org/claims/version"]
             };
           
             return jwtDecoded;
