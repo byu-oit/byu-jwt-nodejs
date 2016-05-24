@@ -120,7 +120,7 @@ Verifies and decodes the signed JWT and then formats it to provide easier access
             id: string,
             name: string,
             tier: string
-        }
+        },
         clientId: string,
         endUser: string,
         endUserTenantId: string,
