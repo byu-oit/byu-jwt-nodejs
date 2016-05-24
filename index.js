@@ -92,9 +92,13 @@ exports.verifyJWT = function (jwt, wellKnownURL) {
     return exports.getWellKnown(wellKnownURL)
         .then(getPublicKeyUtil)
         .then(function (result) {
-            var key = result.publicKey;
-            //verify jwt and returns decoded jwt
-            return jsonwebtoken.verify(jwt, key, {algorithms: algorithms});
+            return new Promise(function(resolve, reject) {
+                var key = result.publicKey;
+                return jsonwebtoken.verify(jwt, key, {algorithms: algorithms}, function(err, decoded) {
+                    if (err) return reject(err);
+                    resolve(decoded);
+                });
+            });
         });
 };
 
