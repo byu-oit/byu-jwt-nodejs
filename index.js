@@ -34,7 +34,10 @@ exports.getWellKnown = function(wellKnownURL) {
     wellKnowns[wellKnownURL] = {};
     var options = {
       url: wellKnownURL,
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'User-Agent': 'BYU-JWT-Node-SDK/1.0 ('+ process.version +')'
+      }
     };
 
     wellKnowns[wellKnownURL].promise = promised_request(options)
