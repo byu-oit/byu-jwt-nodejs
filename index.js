@@ -24,6 +24,9 @@ var pem = require('pem');
 var promisedGetPublicKey = Promise.promisify(pem.getPublicKey);
 var wellKnowns = {};
 
+exports.BYU_JWT_HEADER_CURRENT = 'X-JWT-Assertion';
+exports.BYU_JWT_HEADER_ORIGINAL = 'X-JWT-Assertion-Original';
+
 exports.cacheWellknowns = false;
 
 exports.getWellKnown = function(wellKnownURL) {
