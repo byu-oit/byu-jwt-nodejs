@@ -3,6 +3,40 @@ The *byu-jwt* module provides helpful functions to retrieve a specified BYU *.we
 
 ## API
 
+### JWT Header Names
+BYU's API Manager creates an HTTP header that contains a signed JWT. The names of the designed BYU signed headers can be referenced here for lookup convenience.
+#### BYU_JWT_HEADER_CURRENT
+The property containing the name of the HTTP header that contains the BYU signed JWT sent directly from BYU's API Manager.
+
+Value is `X-JWT-Assertion`.
+
+**Example**
+
+The example uses the property to retrieve the header from the request.
+
+```js
+const byuJwt          = require('byu-jwt');
+...
+var current_jwt = req.headers[byuJwt.BYU_JWT_HEADER_CURRENT];
+byuJwt.verifyJWT(current_jwt,'http://the-wellknown-url.com');
+```
+
+#### BYU_JWT_HEADER_ORIGINAL
+The property containing the name of the HTTP header that contains the BYU signed JWT forwarded on from a service that received the BYU signed JWT sent directly from BYU's API Manager.
+
+Value is `X-JWT-Assertion-Original`.
+
+**Example**
+
+The example uses the property to retrieve the header from the request.
+
+```js
+const byuJwt          = require('byu-jwt');
+...
+var original_jwt = req.headers[byuJwt.BYU_JWT_HEADER_ORIGINAL];
+byuJwt.verifyJWT(current_jwt,'http://the-wellknown-url.com');
+```
+
 ### cacheWellknowns
 
 A property that can be set to enable or disable caching of the responses from well known URLs.
