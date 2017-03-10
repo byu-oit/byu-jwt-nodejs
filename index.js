@@ -24,8 +24,15 @@ var pem = require('pem');
 var promisedGetPublicKey = Promise.promisify(pem.getPublicKey);
 var wellKnowns = {};
 
-exports.BYU_JWT_HEADER_CURRENT = 'X-JWT-Assertion';
-exports.BYU_JWT_HEADER_ORIGINAL = 'X-JWT-Assertion-Original';
+Object.defineProperty(exports, 'BYU_JWT_HEADER_CURRENT', {
+  value: 'X-JWT-Assertion',
+  writable: false
+});
+
+Object.defineProperty(exports, 'BYU_JWT_HEADER_ORIGINAL', {
+  value: 'X-JWT-Assertion-Original',
+  writable: false
+});
 
 exports.cacheWellknowns = false;
 
