@@ -4,7 +4,7 @@ The *byu-jwt* module provides helpful functions to retrieve a specified BYU *.we
 ## API
 
 ### JWT Header Names
-BYU's API Manager creates an HTTP header that contains a signed JWT. The names of the designed BYU signed headers can be referenced here for lookup convenience.
+BYU's API Manager creates an HTTP header that contains a signed JWT(https://jwt.io). The names of the designed BYU signed headers can be referenced here for lookup convenience.
 #### BYU_JWT_HEADER_CURRENT
 The property containing the name of the HTTP header that contains the BYU signed JWT sent directly from BYU's API Manager.
 
