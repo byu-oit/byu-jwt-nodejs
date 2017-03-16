@@ -133,6 +133,7 @@ Verifies and decodes the signed JWT and then formats it to provide easier access
         },
         resourceOwner: {                    // only set if resource owner exists
             byuId: string,
+            netId: string,
             personId: string,
             preferredFirstName: string,
             prefix: string,
