@@ -5,10 +5,15 @@ The *byu-jwt* module provides helpful functions to retrieve a specified BYU *.we
 
 ### JWT Header Names
 BYU's API Manager creates an HTTP header that contains a signed JWT(https://jwt.io). The names of the designed BYU signed headers can be referenced here for lookup convenience.
+
+<i>Note: The values of the headers are in lowercase because Node.js converts the headers by convention.</i>
+
+[https://github.com/nodejs/node-v0.x-archive/issues/1954](https://github.com/nodejs/node-v0.x-archive/issues/1954)
+[https://nodejs.org/api/http.html#http_response_getheaders](https://nodejs.org/api/http.html#http_response_getheaders)
 #### BYU_JWT_HEADER_CURRENT
 The property containing the name of the HTTP header that contains the BYU signed JWT sent directly from BYU's API Manager.
 
-Value is `X-JWT-Assertion`.
+Value is `x-jwt-assertion`.
 
 **Example**
 
@@ -24,7 +29,7 @@ byuJwt.verifyJWT(current_jwt,'http://the-wellknown-url.com');
 #### BYU_JWT_HEADER_ORIGINAL
 The property containing the name of the HTTP header that contains the BYU signed JWT forwarded on from a service that received the BYU signed JWT sent directly from BYU's API Manager.
 
-Value is `X-JWT-Assertion-Original`.
+Value is `x-jwt-assertion-original`.
 
 **Example**
 
