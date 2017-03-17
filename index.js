@@ -25,12 +25,12 @@ var promisedGetPublicKey = Promise.promisify(pem.getPublicKey);
 var wellKnowns = {};
 
 Object.defineProperty(exports, 'BYU_JWT_HEADER_CURRENT', {
-  value: 'X-JWT-Assertion',
+  value: 'x-jwt-assertion',
   writable: false
 });
 
 Object.defineProperty(exports, 'BYU_JWT_HEADER_ORIGINAL', {
-  value: 'X-JWT-Assertion-Original',
+  value: 'x-jwt-assertion-original',
   writable: false
 });
 
