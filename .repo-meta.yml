@@ -18,8 +18,8 @@ ddd:
   ubiquitous_language_url: 
   context_map_url: 
 links:
-  system_documentation_url: https://github.com/byu-oit-appdev/byu-jwt-nodejs
-  source_repo_url: https://github.com/byu-oit-appdev/byu-jwt-nodejs
+  system_documentation_url: https://github.com/byu-oit/byu-jwt-nodejs
+  source_repo_url: https://github.com/byu-oit/byu-jwt-nodejs
   swagger_urls:
 microservice: False
 technologies_used:
@@ -52,5 +52,5 @@ tags:
   env: prd
   app: byu-jwt-nodejs
   team: gro:AD-Student Life Applications
-federation_json_url: https://raw.githubusercontent.com/byu-oit-appdev/byu-jwt-nodejs/master/.repo-meta.yml
+federation_json_url: https://raw.githubusercontent.com/byu-oit/byu-jwt-nodejs/master/.repo-meta.yml
 
