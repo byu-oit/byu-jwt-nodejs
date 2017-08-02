@@ -101,18 +101,23 @@ function getPublicKeyUtil(wellKnownResult) {
  * @returns {*}
  */
 exports.verifyJWT = function (jwt, wellKnownURL) {
+  if(process.env.NODE_ENV === 'mock') {
+    return new Promise.resolve(jsonwebtoken.decode(jwt));
+  }
+  else {
     var algorithms;
     return exports.getWellKnown(wellKnownURL)
-        .then(getPublicKeyUtil)
-        .then(function (result) {
-            return new Promise(function(resolve, reject) {
-                var key = result.publicKey;
-                return jsonwebtoken.verify(jwt, key, {algorithms: algorithms}, function(err, decoded) {
-                    if (err) return reject(err);
-                    resolve(decoded);
-                });
-            });
+      .then(getPublicKeyUtil)
+      .then(function (result) {
+        return new Promise(function(resolve, reject) {
+          var key = result.publicKey;
+          return jsonwebtoken.verify(jwt, key, {algorithms: algorithms}, function(err, decoded) {
+            if (err) return reject(err);
+            resolve(decoded);
+          });
         });
+      });
+  }
 };
 
 /**

@@ -183,3 +183,30 @@ byuJwt.jwtDecoded('ey...gQ', 'http://the-wellknown-url.com')
         console.log(decoded.byu.client_byu_id); // example output: '123456789'
     });
 ```
+
+###Use in tests
+For use in tests (like mocha tests), you can set the environment variable __NODE_ENV__ to `mock`. This will bypass the verifying of the JWT string parameter and simply decode it.
+
+**Example (snippet)**
+```js
+  it('decode JWT without verifying', function (done) {
+    process.env.NODE_ENV = 'mock';
+    //to run test case capture a jwt and copy in the function invokation below.
+    byuJwt.jwtDecoded('ey...gQ', 'http://the-wellknown-url.com')
+      .then(function (jwtDecoded) {
+        try {
+          assert.equal(jwtDecoded.byu.client.netId, '');
+          done()
+        }
+        catch (e) {
+          console.log(e);
+          done(e);
+        }
+      })
+      .catch(function (e) {
+        console.log(e);
+        done(e);
+      });
+  });
+```
+Note: Be sure to unset the environment variable for tests run after this test.

@@ -19,7 +19,29 @@ var assert = require('assert');
 var byuJwt = require('../index');
 
 describe('byuJWTTests', function () {
-  it('jwtDecoded', function (done) {
+  it('verify and decode JWT', function (done) {
+    //to run test case capture a jwt and copy in the function invokation below.
+    byuJwt.jwtDecoded('jwtgoes here', 'well known url goes here')
+      .then(function (jwtDecoded) {
+        try {
+          assert.equal(jwtDecoded.byu.client.netId, '?');
+          assert.equal(jwtDecoded.byu.resourceOwner.netId, '?');
+          assert.equal(jwtDecoded.wso2.keyType, '?');
+          done()
+        }
+        catch (e) {
+          console.log(e);
+          done(e);
+        }
+      })
+      .catch(function (e) {
+        console.log(e);
+        done(e);
+      });
+  });
+
+  it('decode JWT without verifying', function (done) {
+    process.env.NODE_ENV = 'mock';
     //to run test case capture a jwt and copy in the function invokation below.
     byuJwt.jwtDecoded('jwtgoes here', 'well known url goes here')
       .then(function (jwtDecoded) {
