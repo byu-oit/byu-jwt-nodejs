@@ -23,17 +23,32 @@ const pem = require('pem');
 const promisedGetPublicKey = Promise.promisify(pem.getPublicKey);
 const wellKnowns = {};
 
-Object.defineProperty(exports, 'BYU_JWT_HEADER_CURRENT', {
-  value: 'x-jwt-assertion',
-  writable: false
+Object.defineProperties(exports, {
+  'BYU_JWT_HEADER_CURRENT': {
+    value: 'x-jwt-assertion',
+    writable: false
+  },
+  'BYU_JWT_HEADER_ORIGINAL': {
+    value: 'x-jwt-assertion-original',
+    writable: false
+  },
+  'JsonWebTokenError': {
+    value: jsonwebtoken.JsonWebTokenError,
+    writable: false
+  },
+  'NotBeforeError': {
+    value: jsonwebtoken.NotBeforeError,
+    writable: false
+  },
+  'TokenExpiredError': {
+    value: jsonwebtoken.TokenExpiredError,
+    writable: false
+  },
+  'cacheWellknowns': {
+    value: false,
+    writable: true
+  }
 });
-
-Object.defineProperty(exports, 'BYU_JWT_HEADER_ORIGINAL', {
-  value: 'x-jwt-assertion-original',
-  writable: false
-});
-
-exports.cacheWellknowns = false;
 
 exports.getWellKnown = function (wellKnownURL) {
   if (wellKnowns.hasOwnProperty(wellKnownURL) && exports.cacheWellknowns) {
