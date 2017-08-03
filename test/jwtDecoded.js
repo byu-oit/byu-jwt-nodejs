@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Brigham Young University
+ * Copyright 2017 Brigham Young University
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,25 @@
  *
  */
 
-var assert = require('assert');
-var byuJwt = require('../index');
+const assert = require('assert');
+const byuJwt = require('../index');
+
+// To run test cases, capture a JWT and modify the values below
+let test_jwt = 'jwt goes here';
+let wellknown_url = 'well known url goes here';
+let expected_client_netId = '?';
+let expected_resourceOwner_netId = '?';
+let expected_wso2_keyType = '?';
 
 describe('byuJWTTests', function () {
   it('verify and decode JWT', function (done) {
-    //to run test case capture a jwt and copy in the function invokation below.
-    byuJwt.jwtDecoded('jwtgoes here', 'well known url goes here')
+    byuJwt.jwtDecoded(test_jwt, wellknown_url)
       .then(function (jwtDecoded) {
         try {
-          assert.equal(jwtDecoded.byu.client.netId, '?');
-          assert.equal(jwtDecoded.byu.resourceOwner.netId, '?');
-          assert.equal(jwtDecoded.wso2.keyType, '?');
-          done()
+          assert.equal(jwtDecoded.byu.client.netId, expected_client_netId);
+          assert.equal(jwtDecoded.byu.resourceOwner.netId, expected_resourceOwner_netId);
+          assert.equal(jwtDecoded.wso2.keyType, expected_wso2_keyType);
+          done();
         }
         catch (e) {
           console.log(e);
@@ -42,14 +48,13 @@ describe('byuJWTTests', function () {
 
   it('decode JWT without verifying', function (done) {
     process.env.NODE_ENV = 'mock';
-    //to run test case capture a jwt and copy in the function invokation below.
-    byuJwt.jwtDecoded('jwtgoes here', 'well known url goes here')
+    byuJwt.jwtDecoded(test_jwt, wellknown_url)
       .then(function (jwtDecoded) {
         try {
-          assert.equal(jwtDecoded.byu.client.netId, '?');
-          assert.equal(jwtDecoded.byu.resourceOwner.netId, '?');
-          assert.equal(jwtDecoded.wso2.keyType, '?');
-          done()
+          assert.equal(jwtDecoded.byu.client.netId, expected_client_netId);
+          assert.equal(jwtDecoded.byu.resourceOwner.netId, expected_resourceOwner_netId);
+          assert.equal(jwtDecoded.wso2.keyType, expected_wso2_keyType);
+          done();
         }
         catch (e) {
           console.log(e);

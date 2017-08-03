@@ -18,5 +18,8 @@
     "bluebird": "^3.3.1",
     "jsonwebtoken": "^5.7.0",
     "pem": "^1.8.1"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.0"
   }
 }
