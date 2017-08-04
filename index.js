@@ -33,6 +33,10 @@ Object.defineProperties(exports, {
     value: 'x-jwt-assertion-original',
     writable: false
   },
+  'cacheWellknowns': {
+    value: false,
+    writable: true
+  },
   'AuthenticationError': {
     value: AuthenticationError,
     writable: false
@@ -49,10 +53,6 @@ Object.defineProperties(exports, {
     value: jsonwebtoken.TokenExpiredError,
     writable: false
   },
-  'cacheWellknowns': {
-    value: false,
-    writable: true
-  }
 });
 
 exports.getWellKnown = function (wellKnownURL) {
@@ -208,6 +208,11 @@ exports.jwtDecoded = function (jwt, wellKnownURL) {
     });
 };
 
+/**
+ * @param headers
+ * @param wellKnownURL
+ * @param [basePath]
+ */
 exports.authenticate = function validateJWTsFromHeaders(headers, wellKnownURL, basePath) {
   const jwtPromises = [];
 

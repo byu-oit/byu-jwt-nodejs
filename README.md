@@ -23,7 +23,7 @@ The example uses the property to retrieve the header from the request.
 const byuJwt          = require('byu-jwt');
 ...
 var current_jwt = req.headers[byuJwt.BYU_JWT_HEADER_CURRENT];
-byuJwt.verifyJWT(current_jwt,'http://the-wellknown-url.com');
+byuJwt.verifyJWT(current_jwt, 'http://the-wellknown-url.com');
 ```
 
 #### BYU_JWT_HEADER_ORIGINAL
@@ -39,7 +39,7 @@ The example uses the property to retrieve the header from the request.
 const byuJwt          = require('byu-jwt');
 ...
 var original_jwt = req.headers[byuJwt.BYU_JWT_HEADER_ORIGINAL];
-byuJwt.verifyJWT(current_jwt,'http://the-wellknown-url.com');
+byuJwt.verifyJWT(current_jwt, 'http://the-wellknown-url.com');
 ```
 
 ### cacheWellknowns
@@ -55,6 +55,52 @@ The example will set the module to cache well known URL responses:
 ```js
 const byuJwt = require('byu-jwt');
 byuJwt.cacheWellknowns = true;
+```
+
+### AuthenticationError
+
+An error type that inherits from standard Error. Used in **authenticate** function.
+
+**Example**
+
+The example will throw an AuthenticationError and then immediately catch it:
+
+```js
+const byuJwt = require('byu-jwt');
+const AuthenticationError= byuJwt.AuthenticationError;
+
+try {
+    throw new AuthenticationError('No expected JWTs found'));
+} catch (e) {
+    if (e instanceof AuthenticationError) {
+        // Do something (send 401 status?)
+    } else {
+        // Do something else
+    }
+}
+```
+
+### JsonWebTokenError, NotBeforeError, and TokenExpiredError
+
+Exposed error types from [the jsonwebtoken npm package](https://www.npmjs.com/package/jsonwebtoken#errors--codes) that also inherit from standard Error.
+
+**Example**
+
+The example will throw an JsonWebTokenError and then immediately catch it:
+
+```js
+const byuJwt = require('byu-jwt');
+const JsonWebTokenError= byuJwt.JsonWebTokenError;
+
+try {
+    throw new JsonWebTokenError('expired jwt'));
+} catch (e) {
+    if (e instanceof JsonWebTokenError) {
+        // Do something
+    } else {
+        // Do something else
+    }
+}
 ```
 
 ### getWellKnown ( wellKnownURL : string ) : Promise\<object\>
@@ -108,7 +154,7 @@ Verify and decode the signed JWT.
 
 **Returns** a promise that resolves an object.
 
-### jwtDecoded( jwt : string, wellKnownURL : string) : Promise\<object\>
+### jwtDecoded( jwt : string, wellKnownURL : string ) : Promise\<object\>
 
 Verifies and decodes the signed JWT and then formats it to provide easier access to important properties within the JWT.
 
@@ -184,8 +230,84 @@ byuJwt.jwtDecoded('ey...gQ', 'http://the-wellknown-url.com')
     });
 ```
 
+### authenticate( headers : object, wellKnownURL : string, [optional] basePath : string ) : Promise\<object\>
+
+Verifies and decodes the signed JWT and then formats it to provide easier access to important properties within the JWT.
+
+**Parameters**
+
+- **headers** - The headers. An object that looks like:
+```js
+{
+    'x-jwt-assertion': 'ey...gQ'
+}
+```
+- **wellKnownUrl** - The URL to use to get the well known information.
+- **basePath** - (Optional) The base path to compare with API context found in JWT sent from BYU's API manager.
+
+**Returns** a promise that resolves to an object or rejects with an **AuthenticationError**. The object will have the following structure:
+
+```js
+{
+    current: {
+        /* The object returned by running jwtDecoded on current JWT */
+    },
+
+    // Only set if we have an original in addition to a current JWT
+    original: { 
+        /* The object returned by running jwtDecoded on original JWT */
+    },
+    
+    originalJwt: 'ey...gQ', // Here for convenience in passing it along
+    prioritizedClaims: {
+        byuId: string,
+        netId: string,
+        personId: string,
+        preferredFirstName: string,
+        prefix: string,
+        restOfName: string,
+        sortName: string,
+        suffix: string,
+        surname: string,
+        surnamePosition: string
+    }
+}
+```
+
+**Example**
+
+```js
+const byuJwt = require('byu-jwt');
+
+const headers = {
+    'x-jwt-assertion': 'ey...gQ',
+    'x-jwt-assertion-original': 'ey...gQ'
+}
+
+byuJwt.authenticate(headers, 'http://the-wellknown-url.com')
+    .then(function(verifiedJwts) {
+        console.log(verifiedJwts.originalJwt); // example output: 'ey...gQ'
+        console.log(verifiedJwts.prioritizedClaims);
+        /**
+         *  example output:
+         *  {
+         *      byuId: string,
+         *      netId: string,
+         *      personId: string,
+         *      preferredFirstName: string,
+         *      prefix: string,
+         *      restOfName: string,
+         *      sortName: string,
+         *      suffix: string,
+         *      surname: string,
+         *      surnamePosition: string
+         *  }
+         **/
+    });
+```
+
 ###Use in tests
-For use in tests (like mocha tests), you can set the environment variable __NODE_ENV__ to `mock`. This will bypass the verifying of the JWT string parameter and simply decode it.
+For use in tests (like mocha tests), you can set the environment variable __NODE_ENV__ to `mock`. This will bypass the verifying of the JWT string parameter and simply decode it in **jwtDecoded**. Similarly, this will bypass the verifying of JWTs and basePath checking in **authenticate**.
 
 **Example (snippet)**
 ```js
