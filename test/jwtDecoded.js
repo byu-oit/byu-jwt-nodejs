@@ -19,12 +19,12 @@ const assert = require('assert');
 const byuJwt = require('../index');
 
 // To run test cases, capture a JWT and modify the values below
-let test_jwt = 'jwt goes here';
-let wellknown_url = 'well known url goes here';
-let expected_client_netId = '?';
-let expected_resourceOwner_netId = '?';
-let expected_wso2_keyType = '?';
-let test_base_path = ''; // Can optionally leave this empty
+let testJwt = 'jwt goes here';
+let wellKnownUrl = 'well known url goes here';
+let expectedClientNetId = '?';
+let expectedResourceOwnerNetId = '?';
+let expectedWso2KeyType = '?';
+let testBasePath = ''; // Can optionally leave this empty
 
 describe('byuJWTTests', function () {
   let NODE_ENV;
@@ -39,12 +39,12 @@ describe('byuJWTTests', function () {
   });
 
   it('verify and decode JWT', function (done) {
-    byuJwt.jwtDecoded(test_jwt, wellknown_url)
+    byuJwt.jwtDecoded(testJwt, wellKnownUrl)
       .then(function (jwtDecoded) {
         try {
-          assert.equal(jwtDecoded.byu.client.netId, expected_client_netId);
-          assert.equal(jwtDecoded.byu.resourceOwner.netId, expected_resourceOwner_netId);
-          assert.equal(jwtDecoded.wso2.keyType, expected_wso2_keyType);
+          assert.equal(jwtDecoded.byu.client.netId, expectedClientNetId);
+          assert.equal(jwtDecoded.byu.resourceOwner.netId, expectedResourceOwnerNetId);
+          assert.equal(jwtDecoded.wso2.keyType, expectedWso2KeyType);
           done();
         }
         catch (e) {
@@ -60,12 +60,12 @@ describe('byuJWTTests', function () {
 
   it('decode JWT without verifying', function (done) {
     process.env.NODE_ENV = 'mock';
-    byuJwt.jwtDecoded(test_jwt, wellknown_url)
+    byuJwt.jwtDecoded(testJwt, wellKnownUrl)
       .then(function (jwtDecoded) {
         try {
-          assert.equal(jwtDecoded.byu.client.netId, expected_client_netId);
-          assert.equal(jwtDecoded.byu.resourceOwner.netId, expected_resourceOwner_netId);
-          assert.equal(jwtDecoded.wso2.keyType, expected_wso2_keyType);
+          assert.equal(jwtDecoded.byu.client.netId, expectedClientNetId);
+          assert.equal(jwtDecoded.byu.resourceOwner.netId, expectedResourceOwnerNetId);
+          assert.equal(jwtDecoded.wso2.keyType, expectedWso2KeyType);
           done();
         }
         catch (e) {
@@ -80,18 +80,18 @@ describe('byuJWTTests', function () {
   });
 
   it('authenticate from JWT in headers', function (done) {
-    const test_headers = {
-      'x-jwt-assertion': test_jwt
-      //'x-jwt-assertion-original': test_jwt
+    const testHeaders = {
+      'x-jwt-assertion': testJwt
+      //'x-jwt-assertion-original': testJwt
     };
 
-    byuJwt.authenticate(test_headers, wellknown_url, test_base_path)
+    byuJwt.authenticate(testHeaders, wellKnownUrl, testBasePath)
       .then(function (verifiedJwts) {
         try {
-          assert.equal(verifiedJwts.originalJwt, test_jwt);
-          assert.equal(verifiedJwts.current.byu.client.netId, expected_client_netId);
-          assert.equal(verifiedJwts.current.byu.resourceOwner.netId, expected_resourceOwner_netId);
-          assert.equal(verifiedJwts.current.wso2.keyType, expected_wso2_keyType);
+          assert.equal(verifiedJwts.originalJwt, testJwt);
+          assert.equal(verifiedJwts.current.byu.client.netId, expectedClientNetId);
+          assert.equal(verifiedJwts.current.byu.resourceOwner.netId, expectedResourceOwnerNetId);
+          assert.equal(verifiedJwts.current.wso2.keyType, expectedWso2KeyType);
           done();
         }
         catch (e) {
@@ -107,18 +107,18 @@ describe('byuJWTTests', function () {
 
   it('authenticate from JWT in headers without verifying', function (done) {
     process.env.NODE_ENV = 'mock';
-    const test_headers = {
-      'x-jwt-assertion': test_jwt
-      //'x-jwt-assertion-original': test_jwt
+    const testHeaders = {
+      'x-jwt-assertion': testJwt
+      //'x-jwt-assertion-original': testJwt
     };
 
-    byuJwt.authenticate(test_headers, wellknown_url, test_base_path)
+    byuJwt.authenticate(testHeaders, wellKnownUrl, testBasePath)
       .then(function (verifiedJwts) {
         try {
-          assert.equal(verifiedJwts.originalJwt, test_jwt);
-          assert.equal(verifiedJwts.current.byu.client.netId, expected_client_netId);
-          assert.equal(verifiedJwts.current.byu.resourceOwner.netId, expected_resourceOwner_netId);
-          assert.equal(verifiedJwts.current.wso2.keyType, expected_wso2_keyType);
+          assert.equal(verifiedJwts.originalJwt, testJwt);
+          assert.equal(verifiedJwts.current.byu.client.netId, expectedClientNetId);
+          assert.equal(verifiedJwts.current.byu.resourceOwner.netId, expectedResourceOwnerNetId);
+          assert.equal(verifiedJwts.current.wso2.keyType, expectedWso2KeyType);
           done();
         }
         catch (e) {
