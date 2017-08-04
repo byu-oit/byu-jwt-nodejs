@@ -20,6 +20,7 @@ const promised_request = Promise.promisify(require('request'));
 const jsonwebtoken = require('jsonwebtoken');
 const pem = require('pem');
 
+const AuthenticationError = require('./lib/AuthenticationError');
 const promisedGetPublicKey = Promise.promisify(pem.getPublicKey);
 const wellKnowns = {};
 
@@ -30,6 +31,10 @@ Object.defineProperties(exports, {
   },
   'BYU_JWT_HEADER_ORIGINAL': {
     value: 'x-jwt-assertion-original',
+    writable: false
+  },
+  'AuthenticationError': {
+    value: AuthenticationError,
     writable: false
   },
   'JsonWebTokenError': {
@@ -217,7 +222,7 @@ exports.authenticate = function validateJWTsFromHeaders(headers, wellKnownURL, b
 
   // If this came through WSO2, the request should have at least one of these
   if (jwtPromises.length === 0) {
-    return Promise.reject(new Error('No expected JWTs found'));
+    return Promise.reject(new AuthenticationError('No expected JWTs found'));
   }
 
   return Promise.settle(jwtPromises)
@@ -226,17 +231,23 @@ exports.authenticate = function validateJWTsFromHeaders(headers, wellKnownURL, b
 
       // Check that they're valid JWTs
       const currentJwtIndex = verifiedResults.length > 1 ? 1 : 0;
+      const currentJwtResult = verifiedResults[currentJwtIndex]._settledValue();
       if (verifiedResults[currentJwtIndex].isFulfilled()) {
-        verifiedJwts.current = verifiedResults[currentJwtIndex]._settledValue();
+        verifiedJwts.current = currentJwtResult;
+      } else if (currentJwtResult instanceof jsonwebtoken.TokenExpiredError) {
+        throw new AuthenticationError('Expired JWT', currentJwtResult);
       } else {
-        throw new Error('Invalid JWT');
+        throw new AuthenticationError('Invalid JWT', currentJwtResult);
       }
 
       if (verifiedResults.length > 1) {
+        const originalJwtResult = verifiedResults[0]._settledValue();
         if (verifiedResults[0].isFulfilled()) {
-          verifiedJwts.original = verifiedResults[0]._settledValue();
+          verifiedJwts.original = originalJwtResult;
+        } else if (originalJwtResult instanceof jsonwebtoken.TokenExpiredError) {
+          throw new AuthenticationError('Expired Original JWT', originalJwtResult);
         } else {
-          throw new Error('Invalid Original JWT');
+          throw new AuthenticationError('Invalid Original JWT', originalJwtResult);
         }
       }
 
@@ -245,7 +256,7 @@ exports.authenticate = function validateJWTsFromHeaders(headers, wellKnownURL, b
         if (process.env.NODE_ENV !== 'mock') { // To skip this check when testing
           const context_from_current_jwt = verifiedJwts.current['http://wso2.org/claims/apicontext'];
           if (!context_from_current_jwt.startsWith(basePath)) {
-            throw new Error('Invalid API context in JWT.');
+            throw new AuthenticationError('Invalid API context in JWT.');
           }
         }
       }

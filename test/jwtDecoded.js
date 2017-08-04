@@ -131,4 +131,26 @@ describe('byuJWTTests', function () {
         done(e);
       });
   });
+
+  it('authentication fails without JWTs in headers', function (done) {
+    const testHeaders = {};
+
+    byuJwt.authenticate(testHeaders, wellKnownUrl, testBasePath)
+      .then(function (verifiedJwts) {
+        try {
+          console.log(verifiedJwts);
+          assert.fail(); // Should not get here
+          done();
+        }
+        catch (e) {
+          console.log(e);
+          done(e);
+        }
+      })
+      .catch(function (e) {
+        assert(e instanceof byuJwt.AuthenticationError);
+        assert.equal(e.message, 'No expected JWTs found');
+        done();
+      });
+  });
 });
