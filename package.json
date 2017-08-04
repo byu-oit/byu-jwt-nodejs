@@ -5,14 +5,14 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/byu-oit/byu-jwt.git"
+    "url": "git+https://github.com/byu-oit/byu-jwt-nodejs.git"
   },
   "author": "Matthew Hailstone",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/byu-oit/byu-jwt/issues"
+    "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
   },
-  "homepage": "https://github.com/byu-oit/byu-jwt#readme",
+  "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
     "request": "^2.69.0",
     "bluebird": "^3.3.1",
