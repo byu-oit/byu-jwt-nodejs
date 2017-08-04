@@ -202,3 +202,72 @@ exports.jwtDecoded = function (jwt, wellKnownURL) {
       return jwtDecoded;
     });
 };
+
+exports.authenticate = function validateJWTsFromHeaders(headers, wellKnownURL, basePath) {
+  const jwtPromises = [];
+
+  if (headers[exports.BYU_JWT_HEADER_ORIGINAL]) {
+    const originalJwt = headers[exports.BYU_JWT_HEADER_ORIGINAL];
+    jwtPromises.push(exports.jwtDecoded(originalJwt, wellKnownURL));
+  }
+  if (headers[exports.BYU_JWT_HEADER_CURRENT]) {
+    const currentJwt = headers[exports.BYU_JWT_HEADER_CURRENT];
+    jwtPromises.push(exports.jwtDecoded(currentJwt, wellKnownURL));
+  }
+
+  // If this came through WSO2, the request should have at least one of these
+  if (jwtPromises.length === 0) {
+    return Promise.reject(new Error('No expected JWTs found'));
+  }
+
+  return Promise.settle(jwtPromises)
+    .then(verifiedResults => {
+      const verifiedJwts = {};
+
+      // Check that they're valid JWTs
+      const currentJwtIndex = verifiedResults.length > 1 ? 1 : 0;
+      if (verifiedResults[currentJwtIndex].isFulfilled()) {
+        verifiedJwts.current = verifiedResults[currentJwtIndex]._settledValue();
+      } else {
+        throw new Error('Invalid JWT');
+      }
+
+      if (verifiedResults.length > 1) {
+        if (verifiedResults[0].isFulfilled()) {
+          verifiedJwts.original = verifiedResults[0]._settledValue();
+        } else {
+          throw new Error('Invalid Original JWT');
+        }
+      }
+
+      // Check that user is calling our API and not just reusing a JWT obtained elsewhere
+      if (basePath && typeof basePath === 'string') {
+        if (process.env.NODE_ENV !== 'mock') { // To skip this check when testing
+          const context_from_current_jwt = verifiedJwts.current['http://wso2.org/claims/apicontext'];
+          if (!context_from_current_jwt.startsWith(basePath)) {
+            throw new Error('Invalid API context in JWT.');
+          }
+        }
+      }
+
+      // For convenience
+      verifiedJwts.originalJwt = headers[exports.BYU_JWT_HEADER_ORIGINAL] || headers[exports.BYU_JWT_HEADER_CURRENT];
+      verifiedJwts.prioritizedClaims = getPrioritizedClaims(verifiedJwts);
+
+      return verifiedJwts;
+    });
+};
+
+/**
+ * Returns one of the following claims objects, in order of precedence:
+ *   1) Original Resource Owner
+ *   2) Current Resource Owner
+ *   3) Original Client
+ *   4) Current Client
+ */
+function getPrioritizedClaims(verifiedJwts) {
+  if (verifiedJwts.original && verifiedJwts.original.byu.resourceOwner) return verifiedJwts.original.byu.resourceOwner;
+  if (verifiedJwts.current && verifiedJwts.current.byu.resourceOwner) return verifiedJwts.current.byu.resourceOwner;
+  if (verifiedJwts.original && verifiedJwts.original.byu.client) return verifiedJwts.original.byu.client;
+  return verifiedJwts.current.byu.client;
+}
