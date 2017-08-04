@@ -278,6 +278,7 @@ Verifies and decodes the signed JWT and then formats it to provide easier access
 
 ```js
 const byuJwt = require('byu-jwt');
+const AuthenticationError = byuJwt.AuthenticationError;
 
 const headers = {
     'x-jwt-assertion': 'ey...gQ',
@@ -303,7 +304,14 @@ byuJwt.authenticate(headers, 'http://the-wellknown-url.com')
          *      surnamePosition: string
          *  }
          **/
-    });
+    })
+    .catch(err => {
+      if (err instanceof AuthenticationError) {
+        // This error came from authenticate function - Respond with 401
+      } else {
+        // Handle other errors
+      }
+    })
 ```
 
 ###Use in tests
@@ -313,7 +321,7 @@ For use in tests (like mocha tests), you can set the environment variable __NODE
 ```js
   it('decode JWT without verifying', function (done) {
     process.env.NODE_ENV = 'mock';
-    //to run test case capture a jwt and copy in the function invokation below.
+    //to run test case capture a jwt and copy in the function invocation below.
     byuJwt.jwtDecoded('ey...gQ', 'http://the-wellknown-url.com')
       .then(function (jwtDecoded) {
         try {
