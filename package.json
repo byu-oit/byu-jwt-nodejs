@@ -12,6 +12,9 @@
   "bugs": {
     "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
   },
+  "scripts": {
+    "test": "mocha test"
+  },
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
     "jsonwebtoken": "^8.2.1",
