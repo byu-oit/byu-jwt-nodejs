@@ -127,7 +127,7 @@ describe('byu-jwt', function() {
       headers[ByuJWT.BYU_JWT_HEADER_CURRENT] = jwt
       return byuJWT.authenticate(headers)
         .then(result => {
-          expect(result.prioritizedClaims).to.deep.equal(result.current.client)
+          expect(result.claims).to.deep.equal(result.current.client)
         })
     })
 
