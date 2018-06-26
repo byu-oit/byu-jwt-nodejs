@@ -1,342 +1,191 @@
 # byu-jwt
-The *byu-jwt* module provides helpful functions to retrieve a specified BYU *.well-known* URL and verify BYU signed JWTs.
+
+This package provides helpful functions for using validating and using BYU's JWTs.
+
+## Table of Contents
+
+- [API](#api)
+    - [Constructor](#constructor)
+    - [Authenticate](#authenticate)
+    - [Authenticate University API Middleware](#authenticate-university-api-middleware)
+    - [Decode JWT](#decode-jwt)
+    - [Get OpenID Configuration](#get-openid-configuration)
+    - [Get Public Key](#get-public-key)
+    - [Verify JWT](#verify-jwt)
+    - [Cache Time to Live](#cache-time-to-live)
+    - [Static Constants](#static-constants)
+- [Testing](#testing)
 
 ## API
 
-### JWT Header Names
-BYU's API Manager creates an HTTP header that contains a signed JWT(https://jwt.io). The names of the designed BYU signed headers can be referenced here for lookup convenience.
+### Constructor
 
-<i>Note: The values of the headers are in lowercase because Node.js converts the headers by convention.</i>
+`ByuJWT ([ options ])`
 
-[https://github.com/nodejs/node-v0.x-archive/issues/1954](https://github.com/nodejs/node-v0.x-archive/issues/1954)
-[https://nodejs.org/api/http.html#http_response_getheaders](https://nodejs.org/api/http.html#http_response_getheaders)
-#### BYU_JWT_HEADER_CURRENT
-The property containing the name of the HTTP header that contains the BYU signed JWT sent directly from BYU's API Manager.
+**Parameters**
 
-Value is `x-jwt-assertion`.
+- *options* - An `object` that defines the options for this instance of the byu-jwt library:
 
-**Example**
+    | Option | Description | Default |
+    | ------ | ----------- | ------- |
+    | basePath | A `string` that the JWT's API context must begin with. This validates that the JWT came from a server that starts with this path. | `""` |
+    | cacheTTL | The `number` of minutes to cache the OpenID configuration for. | `10` |
+    | development | A `boolean` then when set to `true` will bypass JWT validation. This cannot be set to `true` when the `NODE_ENV` environment variable is set to `"production"`. Also, when set to `true` expect to see a lot of warning message on your console. | `false` |
 
-The example uses the property to retrieve the header from the request.
+**Returns** an instance of the [ByuJWT](#constructor)
+
+### Authenticate
+
+Check the headers to see if the requester is authenticated.
+
+`ByuJWT.prototype.authenticate ( headers )`
+
+**Parameters**
+
+- *headers* - An `object` representing the header names and values. This method is looking specifically for two headers:
+
+    1. `x-jwt-assertion` is a header that contains the JWT for the current client.
+
+    2. `x-jwt-assertion-original` is a header that contains the JWT for the original requester. This value should be set if a client is making an authenticated request on behalf of a different client.
+
+**Returns** a promise that, if authenticated, resolves to an object with some of these properties:
+
+- *current* - The current client's [decoded JWT](#decode-jwt).
+
+- *original* - The original client's [decoded JWT](#decode-jwt). This property may not be defined.
+
+- *originalJWT* - The JWT string provided by the original requester, or if that doesn't exist then of the current client.
+
+- *claims* - A [decoded JWT's](#decode-jwt) primary claim, prioritied in this order:
+
+    1. Original resource owner
+    2. Current resource owner
+    3. Original client
+    4. Current client
+
+### Authenticate University API Middleware
+
+A middleware that will check if the request has authentication and will either add the property `verifiedJWTs` to the request or will respond to the request with a `401` or `500` response code.
+
+`ByuJWT.prototype.authenticateUAPIMiddleware`
+
+**Parameters**
+
+- *req* - The request object.
+
+- *res* - The response object.
+
+- *next* - The next function.
+
+**Returns** `undefined`
 
 ```js
-const byuJwt          = require('byu-jwt');
-...
-var current_jwt = req.headers[byuJwt.BYU_JWT_HEADER_CURRENT];
-byuJwt.verifyJWT(current_jwt, 'http://the-wellknown-url.com');
-```
+const express = require('express')
+const byuJwt = require('byu-jwt')()
 
-#### BYU_JWT_HEADER_ORIGINAL
-The property containing the name of the HTTP header that contains the BYU signed JWT forwarded on from a service that received the BYU signed JWT sent directly from BYU's API Manager.
+const app = express()
 
-Value is `x-jwt-assertion-original`.
+app.use(byuJwt.authenticateUAPIMiddleware)
 
-**Example**
-
-The example uses the property to retrieve the header from the request.
-
-```js
-const byuJwt          = require('byu-jwt');
-...
-var original_jwt = req.headers[byuJwt.BYU_JWT_HEADER_ORIGINAL];
-byuJwt.verifyJWT(current_jwt, 'http://the-wellknown-url.com');
-```
-
-### cacheWellknowns
-
-A property that can be set to enable or disable caching of the responses from well known URLs.
-
-Defaults to `false`.
-
-**Example**
-
-The example will set the module to cache well known URL responses:
-
-```js
-const byuJwt = require('byu-jwt');
-byuJwt.cacheWellknowns = true;
-```
-
-### AuthenticationError
-
-An error type that inherits from standard Error. Used in **authenticate** function.
-
-**Example**
-
-The example will throw an AuthenticationError and then immediately catch it:
-
-```js
-const byuJwt = require('byu-jwt');
-const AuthenticationError= byuJwt.AuthenticationError;
-
-try {
-    throw new AuthenticationError('No expected JWTs found'));
-} catch (e) {
-    if (e instanceof AuthenticationError) {
-        // Do something (send 401 status?)
+const listener = app.listen(3000, err => {
+    if (err) {
+        console.error(err.stack)
     } else {
-        // Do something else
+        console.log('Server listening on port ' + listener.address().port)
     }
-}
+})
 ```
 
-### JsonWebTokenError, NotBeforeError, and TokenExpiredError
+### Decode JWT
 
-Exposed error types from [the jsonwebtoken npm package](https://www.npmjs.com/package/jsonwebtoken#errors--codes) that also inherit from standard Error.
+Verify and decode a JWT.
 
-**Example**
-
-The example will throw an JsonWebTokenError and then immediately catch it:
-
-```js
-const byuJwt = require('byu-jwt');
-const JsonWebTokenError= byuJwt.JsonWebTokenError;
-
-try {
-    throw new JsonWebTokenError('expired jwt'));
-} catch (e) {
-    if (e instanceof JsonWebTokenError) {
-        // Do something
-    } else {
-        // Do something else
-    }
-}
-```
-
-### getWellKnown ( wellKnownURL : string ) : Promise\<object\>
-
-Get the response of the specified *.well-known* URL. If *cacheWellKnowns* is set to `true` then it returns the previously retrieved response.
+`ByuJWT.prototype.decodeJWT ( jwt )`
 
 **Parameters**
 
-- **wellKnownUrl** - The URL to use to get the well known information.
+- *jwt* - A JWT `string` to validate and decode.
 
-**Returns** a promise that resolves to an object. The object is the parsed JSON response from the well known URL.
+**Returns** a promise that, if valid, resolves to an object with these properties:
 
-**Example**
+- *client* - An object that contains the client claims. It has the following properties: `byuId`, `claimSource`, `netId`, `personId`, `preferredFirstName`, `prefix`, `restofName`, `sortName`, `subscriberNetId`, `suffix`, `surname`, `surnamePosition`
 
-```js
-const byuJwt = require('byu-jwt');
-byuJwt.getWellKnown('http://the-wellknown-url.com')
-    .then(function(wellKnownObject) {
-        console.log('Response:', wellKnownObject);
-    });
-```
+- *claims* - The primary claims object, prefering resource owner first and client second.
 
-### getPublicKey ( wellKnownURL : string ) : Promise\<string\>
+- *raw* - The raw claims aquired by validating the JWT.
 
-Get the PEM formatted X509 certificate.
+- *resourceOwner* - The resource owner claims (if a resource owner is defined). It has the following properties: `byuId`, `netId`, `personId`, `preferredFirstName`, `prefix`, `restofName`, `sortName`, `suffix`, `surname`, `surnamePosition`
 
-**Parameters**
+- *wso2*- Claims specific to WSO2.It has the following properties: `apiContext`, `application.id`, `application.name`, `application.tier`, `clientId`, `endUser`, `endUserTenantId`, `keyType`, `subscriber`, `tier`, `userType`, `version`
 
-- **wellKnownUrl** - The URL to use to get the well known information.
+### Get OpenId Configuration
 
-**Returns** a promise that resolves a string.
+Get the OpenID configuration from the well known url.
 
-**Example**
+`ByuJWT.prototype.getOpenIdConfiguration ()`
 
-```js
-const byuJwt = require('byu-jwt');
-byuJwt.getPublicKey('http://the-wellknown-url.com')
-    .then(function(publicKey) {
-        console.log('Response:', publicKey);
-    });
-```
+**Parameters** None
 
-### verifyJWT ( jwt : string, wellKnownURL : string ) : Promise\<object\>
+**Returns** a promise that resolves to the OpenID configuration.
 
-Verify and decode the signed JWT.
+### Get Public Key
 
-**Parameters**
+Get the public key for the OpenID configuration.
 
-- **jwt** - The signed JWT.
-- **wellKnownUrl** - The URL to use to get the well known information.
+`ByuJWT.prototype.getPublicKey ()`
 
-**Returns** a promise that resolves an object.
+**Parameters** None
 
-### jwtDecoded( jwt : string, wellKnownURL : string ) : Promise\<object\>
+**Returns** a promise that resolves to the public key `string`.
 
-Verifies and decodes the signed JWT and then formats it to provide easier access to important properties within the JWT.
+### Verify JWT
+
+Check to see if a JWT is valid.
+
+`ByuJWT.prototype.verifyJWT ( jwt )`
 
 **Parameters**
 
-- **jwt** - The signed JWT.
-- **wellKnownUrl** - The URL to use to get the well known information.
+- *jwt* - A JWT `string` to verify.
 
-**Returns** a promise that resolves to an object. The object will have many properties, but the most relevant will have the following structure:
+**Returns** a promise that resolves to a `boolean`.
 
-```js
-{
-    byu: {
-        client: {
-            byuId: string,
-            claimSource: string,
-            netId: string,
-            personId: string,
-            preferredFirstName: string,
-            prefix: string,
-            restOfName: string,
-            sortName: string,
-            subscriberNetId: string,
-            suffix: string,
-            surname: string,
-            surnamePosition: string
-        },
-        resourceOwner: {                    // only set if resource owner exists
-            byuId: string,
-            netId: string,
-            personId: string,
-            preferredFirstName: string,
-            prefix: string,
-            restOfName: string,
-            sortName: string,
-            suffix: string,
-            surname: string,
-            surnamePosition: string
-        },
-        webresCheck: {
-            byuId: string,
-            netId: string,
-            personId: string,
-        }
-    },
-    wso2: {
-        apiContext: string,
-        application: {
-            id: string,
-            name: string,
-            tier: string
-        },
-        clientId: string,
-        endUser: string,
-        endUserTenantId: string,
-        keyType: string,
-        subscriber: string,
-        tier: string,
-        userType: string,
-        version: string
-    }
-}
-```
+### Cache Time to Live
 
-**Example**
+Get or set the cache time to live. The cache only affects how often the OpenID configuration is redownloaded.
 
 ```js
-const byuJwt = require('byu-jwt');
-
-byuJwt.jwtDecoded('ey...gQ', 'http://the-wellknown-url.com')
-    .then(function(decoded) {
-        console.log(decoded.byu.client_byu_id); // example output: '123456789'
-    });
+const byuJwt = require('byu-jwt')()
+byuJWT.cacheTTL = 15                    // set cache to 15 minutes
 ```
 
-### authenticate( headers : object, wellKnownURL : string, [optional] basePath : string ) : Promise\<object\>
+### Static Constants
 
-Verifies and decodes the signed JWT and then formats it to provide easier access to important properties within the JWT.
+The following properties are accessible on the ByuJWT object without needing an instantiated object.
 
-**Parameters**
+- *BYU_JWT_HEADER_CURRENT* - The header name for the current JWT.
 
-- **headers** - The headers. An object that looks like:
-```js
-{
-    'x-jwt-assertion': 'ey...gQ'
-}
-```
-- **wellKnownUrl** - The URL to use to get the well known information.
-- **basePath** - (Optional) The base path to compare with API context found in JWT sent from BYU's API manager.
+- *BYU_JWT_HEADER_ORIGINAL* - The header name for the original JWT.
 
-**Returns** a promise that resolves to an object or rejects with an **AuthenticationError**. The object will have the following structure:
+- *AuthenticationError* - A reference to the AuthenticationError constructor.
+
+- *JsonWebTokenError* - A reference to the JsonWebTokenError constructor.
+
+- *NotBeforeError* - A reference to the NotBeforeError constructor.
+
+- *TokenExpiredError* - A reference to the TokenExpiredError constructor.
 
 ```js
-{
-    current: {
-        /* The object returned by running jwtDecoded on current JWT */
-    },
-
-    // Only set if we have an original in addition to a current JWT
-    original: { 
-        /* The object returned by running jwtDecoded on original JWT */
-    },
-    
-    originalJwt: 'ey...gQ', // Here for convenience in passing it along
-    prioritizedClaims: {
-        byuId: string,
-        netId: string,
-        personId: string,
-        preferredFirstName: string,
-        prefix: string,
-        restOfName: string,
-        sortName: string,
-        suffix: string,
-        surname: string,
-        surnamePosition: string
-    }
-}
+const ByuJWT = require('byu-jwt')
+console.log(ByuJWT.BYU_JWT_HEADER_CURRENT)  // "x-jwt-assertion"
 ```
 
-**Example**
+## Testing
 
-```js
-const byuJwt = require('byu-jwt');
-const AuthenticationError = byuJwt.AuthenticationError;
+To test this library:
 
-const headers = {
-    'x-jwt-assertion': 'ey...gQ',
-    'x-jwt-assertion-original': 'ey...gQ'
-}
+1. Run `npm install`
 
-byuJwt.authenticate(headers, 'http://the-wellknown-url.com')
-    .then(function(verifiedJwts) {
-        console.log(verifiedJwts.originalJwt); // example output: 'ey...gQ'
-        console.log(verifiedJwts.prioritizedClaims);
-        /**
-         *  example output:
-         *  {
-         *      byuId: string,
-         *      netId: string,
-         *      personId: string,
-         *      preferredFirstName: string,
-         *      prefix: string,
-         *      restOfName: string,
-         *      sortName: string,
-         *      suffix: string,
-         *      surname: string,
-         *      surnamePosition: string
-         *  }
-         **/
-    })
-    .catch(err => {
-      if (err instanceof AuthenticationError) {
-        // This error came from authenticate function - Respond with 401
-      } else {
-        // Handle other errors
-      }
-    })
-```
+2. Run `awslogin` (https://github.com/byu-oit/awslogin)
 
-###Use in tests
-For use in tests (like mocha tests), you can set the environment variable __NODE_ENV__ to `mock`. This will bypass the verifying of the JWT string parameter and simply decode it in **jwtDecoded**. Similarly, this will bypass the verifying of JWTs and basePath checking in **authenticate**.
-
-**Example (snippet)**
-```js
-  it('decode JWT without verifying', function (done) {
-    process.env.NODE_ENV = 'mock';
-    //to run test case capture a jwt and copy in the function invocation below.
-    byuJwt.jwtDecoded('ey...gQ', 'http://the-wellknown-url.com')
-      .then(function (jwtDecoded) {
-        try {
-          assert.equal(jwtDecoded.byu.client.netId, '');
-          done()
-        }
-        catch (e) {
-          console.log(e);
-          done(e);
-        }
-      })
-      .catch(function (e) {
-        console.log(e);
-        done(e);
-      });
-  });
-```
-Note: Be sure to unset the environment variable for tests run after this test.
+3. Run `npm test`
