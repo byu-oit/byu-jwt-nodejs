@@ -1,6 +1,6 @@
 {
   "name": "byu-jwt",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The byu-jwt module provides helpful functions to retrieve a specified BYU .well-known URL and verify BYU signed JWTs.",
   "main": "index.js",
   "repository": {
@@ -18,7 +18,7 @@
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
     "jsonwebtoken": "^8.2.1",
-    "pem": "^1.12.5"
+    "pem": "1.12.7"
   },
   "devDependencies": {
     "aws-sdk": "^2.263.1",
