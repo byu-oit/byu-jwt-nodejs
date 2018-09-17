@@ -18,7 +18,7 @@
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
     "jsonwebtoken": "^8.2.1",
-    "pem": "1.12.7"
+    "pem": "^1.13.1"
   },
   "devDependencies": {
     "aws-sdk": "^2.263.1",
