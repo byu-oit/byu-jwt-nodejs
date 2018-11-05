@@ -1,6 +1,6 @@
 {
   "name": "byu-jwt",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "The byu-jwt module provides helpful functions to retrieve a specified BYU .well-known URL and verify BYU signed JWTs.",
   "main": "index.js",
   "repository": {
