@@ -58,7 +58,7 @@ describe('byu-jwt', function() {
       }
       request(reqConfig, function(err, res, body) {
         try {
-          const obj = JSON.parse(body)
+          const obj = typeof body === 'object' ? body : JSON.parse(body)
           jwt = obj.Headers['X-Jwt-Assertion'][0]
         } catch (err) {
           throw Error('Unable to get JWT: \n' + body)
