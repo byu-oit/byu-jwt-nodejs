@@ -13,18 +13,20 @@
     "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
   },
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test",
+    "lint": "./node_modules/.bin/standard --fix"
   },
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
     "debug": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
-    "pem": "^1.14.2"
+    "pem": "^1.14.3"
   },
   "devDependencies": {
     "aws-sdk": "^2.578.0",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "standard": "^14.3.1"
   }
 }
