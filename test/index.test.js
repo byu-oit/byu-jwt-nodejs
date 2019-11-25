@@ -14,39 +14,41 @@
 * limitations under the License.
 *
 */
-const AWS       = require('aws-sdk')
-const expect    = require('chai').expect
-const ByuJWT    = require('../index')
-const request   = require('request')
+/* global describe it beforeEach before */
 
-describe('byu-jwt', function() {
+const AWS = require('aws-sdk')
+const expect = require('chai').expect
+const ByuJWT = require('../index')
+const request = require('request')
+
+describe('byu-jwt', function () {
   let byuJWT
   let jwt
 
   before(done => {
-    console.log('Acquiring test credentials. Please wait...');
+    console.log('Acquiring test credentials. Please wait...')
     byuJWT = ByuJWT({ cacheTTL: 0 })
 
-    const ssm = new AWS.SSM({ region: 'us-west-2' });
+    const ssm = new AWS.SSM({ region: 'us-west-2' })
     const params = {
       Name: 'wabs-oauth-test.dev.config',
       WithDecryption: true
-    };
-    ssm.getParameter(params, function(err, param) {
+    }
+    ssm.getParameter(params, function (err, param) {
       if (err) {
-        console.error('AWS Error: ' + err.message);
+        console.error('AWS Error: ' + err.message)
         console.log('Make sure that you have awslogin (https://github.com/byu-oit/awslogin) ' +
           'installed, run the command "awslogin" in your terminal, and select the "dev-oit-byu" ' +
-          'account.');
-        process.exit(1);
+          'account.')
+        process.exit(1)
       }
 
-      let config;
+      let config
       try {
-        config = JSON.parse(param.Parameter.Value);
+        config = JSON.parse(param.Parameter.Value)
       } catch (err) {
-        console.error('Parameter parsing error: ' + err.message);
-        process.exit(1);
+        console.error('Parameter parsing error: ' + err.message)
+        process.exit(1)
       }
 
       const reqConfig = {
@@ -56,16 +58,17 @@ describe('byu-jwt', function() {
           Authorization: 'Bearer ' + config.accessToken
         }
       }
-      request(reqConfig, function(err, res, body) {
+      request(reqConfig, function (err, res, body) {
+        if (err) throw Error('Unable to request JWT: \n' + err)
         try {
           const obj = typeof body === 'object' ? body : JSON.parse(body)
           jwt = obj.Headers['X-Jwt-Assertion'][0]
         } catch (err) {
           throw Error('Unable to get JWT: \n' + body)
         }
-        done();
+        done()
       })
-    });
+    })
   })
 
   it('can get OpenID configuration', () => {
@@ -84,7 +87,6 @@ describe('byu-jwt', function() {
   })
 
   describe('verifyJWT', () => {
-
     it('valid JWT', () => {
       return byuJWT.verifyJWT(jwt)
         .then(value => {
@@ -98,11 +100,9 @@ describe('byu-jwt', function() {
           expect(value).to.equal(false)
         })
     })
-
   })
 
   describe('decodeJWT', () => {
-
     it('valid JWT', () => {
       return byuJWT.decodeJWT(jwt)
         .then(value => {
@@ -117,11 +117,9 @@ describe('byu-jwt', function() {
           expect(err.message).to.equal('jwt malformed')
         })
     })
-
   })
 
   describe('authenticate', () => {
-
     it('valid JWT', () => {
       const headers = {}
       headers[ByuJWT.BYU_JWT_HEADER_CURRENT] = jwt
@@ -140,7 +138,6 @@ describe('byu-jwt', function() {
           expect(err.message).to.equal('Invalid JWT')
         })
     })
-
   })
 
   describe('authenticateUAPIMiddleware', () => {
@@ -156,11 +153,11 @@ describe('byu-jwt', function() {
         code: 0,
         body: '',
         promise: deferred.promise,
-        status: function(code) {
+        status: function (code) {
           this.code = code
           return res
         },
-        send: function(body) {
+        send: function (body) {
           this.body = body
           deferred.resolve()
         }
@@ -172,7 +169,7 @@ describe('byu-jwt', function() {
       headers[ByuJWT.BYU_JWT_HEADER_CURRENT] = jwt
       const req = { headers: headers }
 
-      byuJWT.authenticateUAPIMiddleware(req, res, function() {
+      byuJWT.authenticateUAPIMiddleware(req, res, function () {
         expect(req).to.have.ownProperty('verifiedJWTs')
         done()
       })
@@ -182,15 +179,13 @@ describe('byu-jwt', function() {
       const headers = {}
       headers[ByuJWT.BYU_JWT_HEADER_CURRENT] = 'not-a-jwt'
       const req = { headers: headers }
-      byuJWT.authenticateUAPIMiddleware(req, res, function() {
-        done(Error('should not get here'))
+      byuJWT.authenticateUAPIMiddleware(req, res, function () {
+        throw Error('should not get here')
       })
       return res.promise
         .then(() => {
           expect(res.code).to.equal(401)
         })
     })
-
   })
-
-});
+})
