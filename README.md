@@ -2,8 +2,11 @@
 
 This package provides helpful functions for using validating and using BYU's JWTs.
 
+**Requires Node 8 or above**
+
 ## Table of Contents
 
+- [Migrate from v1 to v2](#migrate-from-v1-to-v2)
 - [API](#api)
     - [Constructor](#constructor)
     - [Authenticate](#authenticate)
@@ -15,6 +18,9 @@ This package provides helpful functions for using validating and using BYU's JWT
     - [Cache Time to Live](#cache-time-to-live)
     - [Static Constants](#static-constants)
 - [Testing](#testing)
+
+## Migrate from v1 to v2
+* Update to Node 8 or above
 
 ## API
 

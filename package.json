@@ -16,6 +16,9 @@
     "test": "mocha test",
     "lint": "./node_modules/.bin/standard --fix"
   },
+  "engines": {
+    "node": ">=8"
+  },
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
     "debug": "^4.1.1",
