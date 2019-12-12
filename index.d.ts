@@ -10,7 +10,7 @@ interface Cache {
 }
 
 // ByuJWT Implementation
-declare function ByuJWT(options: any): any
+declare function ByuJWT(options?: any): any
 declare namespace ByuJWT {
   const BYU_JWT_HEADER_CURRENT: string
   const BYU_JWT_HEADER_ORIGINAL: string
