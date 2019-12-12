@@ -16,4 +16,4 @@ declare namespace ByuJWT {
   function NotBeforeError(message: any, date: any): void
   function TokenExpiredError(message: any, expiredAt: any): void
 }
-export = ByuJWT
+export default ByuJWT
