@@ -10,6 +10,7 @@ export interface Cache {
 }
 
 export interface Options {
+  basePath?: string,
   cacheTTL?: number
   development?: boolean
 }
