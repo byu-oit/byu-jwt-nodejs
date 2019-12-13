@@ -130,32 +130,26 @@ export interface ByuOpenIdConfig {
   scopes_supported: string[];
 }
 
-// ByuJWT Implementation
-declare function ByuJWT(options?: Options): any
+export interface ByuJwtInstance {
+  authenticate(headers: any): Promise<VerifiedJwts>
+  authenticateUAPIMiddleware(req: Request, response: Response, next: NextFunction): Promise<void>
+  decodeJWT(jwt: string): Promise<DecodedByuJwt>
+  getOpenIdConfiguration(): Promise<ByuOpenIdConfig>
+  getPublicKey(): Promise<string>
+  verifyJWT(jwt: string): Promise<boolean>
+}
 
+// TODO: Make this function and namespace co-exist
+declare function ByuJWT(options?: Options): ByuJwtInstance
 declare namespace ByuJWT {
   const BYU_JWT_HEADER_CURRENT: string
   const BYU_JWT_HEADER_ORIGINAL: string
   const WELL_KNOWN_URL: string
 
-  function authenticate(options: any, cache: Cache, headers: any): Promise<VerifiedJwts>
-
-  function authenticateUAPIMiddleware(req: Request, response: Response, next: NextFunction): Promise<void>
-
-  function decodeJWT(options: any, cache: Cache, jwt: string): Promise<DecodedByuJwt>
-
-  function getOpenIdConfiguration(cache: Cache): Promise<ByuOpenIdConfig>
-
-  function getPublicKey(cache: Cache): Promise<string>
-
-  function verifyJWT(options: any, cache: Cache, jwt: string): Promise<boolean>
-
   function AuthenticationError(message: string, error?: Error): Error
-
   function JsonWebTokenError(message: string, error?: Error): Error
-
   function NotBeforeError(message: string, date: Date): Error
-
   function TokenExpiredError(message: string, expiredAt: Date): Error
 }
+
 export default ByuJWT
