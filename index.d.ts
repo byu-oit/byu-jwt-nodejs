@@ -139,17 +139,12 @@ export interface ByuJwtInstance {
   verifyJWT(jwt: string): Promise<boolean>
 }
 
-// TODO: Make this function and namespace co-exist
-declare function ByuJWT(options?: Options): ByuJwtInstance
-declare namespace ByuJWT {
-  const BYU_JWT_HEADER_CURRENT: string
-  const BYU_JWT_HEADER_ORIGINAL: string
-  const WELL_KNOWN_URL: string
-
-  function AuthenticationError(message: string, error?: Error): Error
-  function JsonWebTokenError(message: string, error?: Error): Error
-  function NotBeforeError(message: string, date: Date): Error
-  function TokenExpiredError(message: string, expiredAt: Date): Error
-}
-
-export default ByuJWT
+export default function (options?: Options): ByuJwtInstance
+export const BYU_JWT_HEADER: string
+export const BYU_JWT_HEADER_CURRENT: string
+export const BYU_JWT_HEADER_ORIGINAL: string
+export const WELL_KNOWN_URL: string
+export function AuthenticationError(message: string, error?: Error): Error
+export function JsonWebTokenError(message: string, error?: Error): Error
+export function NotBeforeError(message: string, date: Date): Error
+export function TokenExpiredError(message: string, expiredAt: Date): Error
