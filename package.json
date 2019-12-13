@@ -26,6 +26,7 @@
     "pem": "^1.14.3"
   },
   "devDependencies": {
+    "@types/express": "^4.17.2",
     "aws-sdk": "^2.578.0",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
