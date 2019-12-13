@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from 'express'
 
 // Cache Implementation
-interface Cache {
+export interface Cache {
   clearCache: () => void;
   getCache: () => any;
   setCache: (value: any) => void;
@@ -9,12 +9,12 @@ interface Cache {
   setTTL: (ttl: number) => void;
 }
 
-interface Options {
+export interface Options {
   cacheTTL?: number
   development?: boolean
 }
 
-interface JwtClaim {
+export interface JwtClaim {
   byuId: string
   claimSource: string
   netId: string
@@ -28,9 +28,9 @@ interface JwtClaim {
   surnamePosition: string
 }
 
-type Client = JwtClaim & { subscriberNetId: string }
+export type Client = JwtClaim & { subscriberNetId: string }
 
-interface Wso2Claim {
+export interface Wso2Claim {
   apiContext: string
   application: {
     id: string
@@ -47,19 +47,19 @@ interface Wso2Claim {
   version: string
 }
 
-interface DecodedByuJwtBase {
+export interface DecodedByuJwtBase {
   client: Client;
   raw: any;
   wso2: Wso2Claim
 }
 
-type DecodedByuJwtResourceOwner = DecodedByuJwtBase & { resourceOwner: JwtClaim; claims: JwtClaim }
+export type DecodedByuJwtResourceOwner = DecodedByuJwtBase & { resourceOwner: JwtClaim; claims: JwtClaim }
 
-type DecodedByuJwtClient = DecodedByuJwtBase & { claims: Client }
+export type DecodedByuJwtClient = DecodedByuJwtBase & { claims: Client }
 
-type DecodedByuJwt = DecodedByuJwtClient | DecodedByuJwtResourceOwner
+export type DecodedByuJwt = DecodedByuJwtClient | DecodedByuJwtResourceOwner
 
-interface ByuOpenIdConfig {
+export interface ByuOpenIdConfig {
   issuer: string;
   authorization_endpoint: string;
   token_endpoint: string;
