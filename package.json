@@ -13,8 +13,8 @@
     "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
   },
   "scripts": {
-    "test": "mocha test",
-    "lint": "./node_modules/.bin/standard --fix"
+    "test": "npx nyc --reporter=lcov --reporter=text-summary mocha test --exit",
+    "lint": "npx standard --fix"
   },
   "engines": {
     "node": ">=8"
@@ -30,6 +30,7 @@
     "aws-sdk": "^2.578.0",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
+    "nyc": "^15.0.0",
     "request": "^2.88.0",
     "standard": "^14.3.1"
   }
