@@ -25,6 +25,7 @@ This package provides helpful functions for using validating and using BYU's JWT
 ## Migrate from v2 to v3
 * `getPublicKey` has been [removed](https://github.com/byu-oit/byu-jwt-nodejs/commit/fe16edddd1f59a4f6c37acc29d9a20b5878626bd) - If you were using it, look into the new `getPem` function
 * Ensure that the [`openssl`](https://nodejs.org/en/docs/meta/topics/dependencies/#openssl) shipped with your version of Node supports the algorithms you need - We're now using that instead of expecting an `openssl` executable to be found on the system.
+  * This is probably a non-issue because our JWTs have been using RSA-256, which `openssl` has supported for _years_.
 
 ## API
 
