@@ -135,7 +135,7 @@ export interface ByuJwtInstance {
   authenticateUAPIMiddleware(req: Request, response: Response, next: NextFunction): Promise<void>
   decodeJWT(jwt: string): Promise<DecodedByuJwt>
   getOpenIdConfiguration(): Promise<ByuOpenIdConfig>
-  getPublicKey(): Promise<string>
+  getPem(): Promise<string>
   verifyJWT(jwt: string): Promise<boolean>
 }
 
