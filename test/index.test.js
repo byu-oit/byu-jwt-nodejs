@@ -60,10 +60,11 @@ describe('byu-jwt', function () {
       })
   })
 
-  it('can get public key', () => {
-    return byuJWT.getPublicKey()
+  it('can get pem', () => {
+    return byuJWT.getPem()
       .then(value => {
-        expect(value).to.match(/^-+BEGIN PUBLIC KEY-+/)
+        expect(value).to.match(/^-----BEGIN CERTIFICATE-----/)
+        expect(value).to.match(/-----END CERTIFICATE-----$/)
       })
   })
 
