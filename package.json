@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/byu-oit/byu-jwt-nodejs.git"
   },
-  "author": "Matthew Hailstone",
+  "author": "Gary Crye",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
