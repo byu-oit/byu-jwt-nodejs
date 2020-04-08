@@ -13,7 +13,7 @@ This package provides helpful functions for using validating and using BYU's JWT
     - [Authenticate University API Middleware](#authenticate-university-api-middleware)
     - [Decode JWT](#decode-jwt)
     - [Get OpenID Configuration](#get-openid-configuration)
-    - [Get Public Key](#get-public-key)
+    - [Get Pem](#get-pem)
     - [Verify JWT](#verify-jwt)
     - [Cache Time to Live](#cache-time-to-live)
     - [Static Constants](#static-constants)
@@ -21,6 +21,10 @@ This package provides helpful functions for using validating and using BYU's JWT
 
 ## Migrate from v1 to v2
 * Update to Node 8 or above
+
+## Migrate from v2 to v3
+* `getPublicKey` has been [removed](https://github.com/byu-oit/byu-jwt-nodejs/commit/fe16edddd1f59a4f6c37acc29d9a20b5878626bd) - If you were using it, look into the new `getPem` function
+* Ensure that the [`openssl`](https://nodejs.org/en/docs/meta/topics/dependencies/#openssl) shipped with your version of Node supports the algorithms you need - We're now using that instead of expecting an `openssl` executable to be found on the system.
 
 ## API
 
@@ -134,15 +138,15 @@ Get the OpenID configuration from the well known url.
 
 **Returns** a promise that resolves to the OpenID configuration.
 
-### Get Public Key
+### Get Pem
 
-Get the public key for the OpenID configuration.
+Get the certificate for the OpenID configuration, in .pem format.
 
-`ByuJWT.prototype.getPublicKey ()`
+`ByuJWT.prototype.getPem ()`
 
 **Parameters** None
 
-**Returns** a promise that resolves to the public key `string`.
+**Returns** a promise that resolves to the pem `string`.
 
 ### Verify JWT
 
@@ -192,6 +196,6 @@ To test this library:
 
 1. Run `npm install`
 
-2. Run `awslogin` (https://github.com/byu-oit/awslogin)
+2. Set the `TOKEN` environment variable
 
 3. Run `npm test`
