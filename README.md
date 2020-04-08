@@ -7,6 +7,7 @@ This package provides helpful functions for using validating and using BYU's JWT
 ## Table of Contents
 
 - [Migrate from v1 to v2](#migrate-from-v1-to-v2)
+- [Migrate from v2 to v3](#migrate-from-v2-to-v3)
 - [API](#api)
     - [Constructor](#constructor)
     - [Authenticate](#authenticate)
