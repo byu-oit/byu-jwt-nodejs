@@ -16,7 +16,10 @@
 */
 /* global describe it beforeEach before */
 
-const AWS = require('aws-sdk')
+// This should be a WSO2 token authorized to call the Echo v1 service at
+// https://api.byu.edu/store/apis/info?name=Echo&version=v1&provider=BYU%2Fbcwinter
+const TOKEN = process.env.TOKEN
+
 const expect = require('chai').expect
 const ByuJWT = require('../index')
 const request = require('request')
@@ -26,48 +29,26 @@ describe('byu-jwt', function () {
   let jwt
 
   before(done => {
-    console.log('Acquiring test credentials. Please wait...')
+    if (!TOKEN) throw Error('No TOKEN specified for tests')
+
     byuJWT = ByuJWT({ cacheTTL: 0 })
 
-    const ssm = new AWS.SSM({ region: 'us-west-2' })
-    const params = {
-      Name: 'wabs-oauth-test.dev.config',
-      WithDecryption: true
+    const reqConfig = {
+      method: 'get',
+      url: 'https://api.byu.edu:443/echo/v1/echo/admin',
+      headers: {
+        Authorization: 'Bearer ' + TOKEN
+      }
     }
-    ssm.getParameter(params, function (err, param) {
-      if (err) {
-        console.error('AWS Error: ' + err.message)
-        console.log('Make sure that you have awslogin (https://github.com/byu-oit/awslogin) ' +
-          'installed, run the command "awslogin" in your terminal, and select the "dev-oit-byu" ' +
-          'account.')
-        process.exit(1)
-      }
-
-      let config
+    request(reqConfig, function (err, res, body) {
+      if (err) throw Error('Unable to request JWT: \n' + err)
       try {
-        config = JSON.parse(param.Parameter.Value)
+        const obj = typeof body === 'object' ? body : JSON.parse(body)
+        jwt = obj.Headers['X-Jwt-Assertion'][0]
       } catch (err) {
-        console.error('Parameter parsing error: ' + err.message)
-        process.exit(1)
+        throw Error('Unable to get JWT: \n' + body)
       }
-
-      const reqConfig = {
-        method: 'get',
-        url: 'https://api.byu.edu:443/echo/v1/echo/admin',
-        headers: {
-          Authorization: 'Bearer ' + config.accessToken
-        }
-      }
-      request(reqConfig, function (err, res, body) {
-        if (err) throw Error('Unable to request JWT: \n' + err)
-        try {
-          const obj = typeof body === 'object' ? body : JSON.parse(body)
-          jwt = obj.Headers['X-Jwt-Assertion'][0]
-        } catch (err) {
-          throw Error('Unable to get JWT: \n' + body)
-        }
-        done()
-      })
+      done()
     })
   })
 
