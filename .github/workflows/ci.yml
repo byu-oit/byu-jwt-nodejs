@@ -21,4 +21,4 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm cit # Linting is done as a post-test script
+      - run: npm it # Linting is done as a post-test script
