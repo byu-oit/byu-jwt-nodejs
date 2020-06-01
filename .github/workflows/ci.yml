@@ -22,3 +22,5 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm it # Linting is done as a post-test script
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
