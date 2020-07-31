@@ -130,9 +130,13 @@ export interface ByuOpenIdConfig {
   scopes_supported: string[];
 }
 
+export interface DecoratedRequest extends Request {
+  verifiedJWTs: VerifiedJwts
+}
+
 export interface ByuJwtInstance {
   authenticate(headers: any): Promise<VerifiedJwts>
-  authenticateUAPIMiddleware(req: Request, response: Response, next: NextFunction): Promise<void>
+  authenticateUAPIMiddleware(req: DecoratedRequest, response: Response, next: NextFunction): Promise<void>
   decodeJWT(jwt: string): Promise<DecodedByuJwt>
   getOpenIdConfiguration(): Promise<ByuOpenIdConfig>
   getPem(): Promise<string>
