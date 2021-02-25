@@ -142,13 +142,17 @@ Get the OpenID configuration from the well known url.
 
 ### Get Pem
 
+**DEPRECATED**
+
+Avoid use of this function because it may not always return the certificate you're hoping for.
+
 Get the certificate for the OpenID configuration, in .pem format.
 
 `ByuJWT.prototype.getPem ()`
 
 **Parameters** None
 
-**Returns** a promise that resolves to the pem `string`.
+**Returns** a promise that resolves to the first certificate pem `string`.
 
 ### Verify JWT
 
