@@ -1,0 +1,15 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "08:00"
+    timezone: America/Denver
+  open-pull-requests-limit: 10
+  reviewers:
+  - GaryGSC
+  ignore:
+  - dependency-name: aws-sdk
+    versions:
+    - "> 2.472.0, < 3"
