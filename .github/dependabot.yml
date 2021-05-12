@@ -13,8 +13,3 @@ updates:
   - dependency-name: aws-sdk
     versions:
     - "> 2.472.0, < 3"
-  - dependency-name: mocha
-    versions:
-    - 8.2.1
-    - 8.3.0
-    - 8.3.1
