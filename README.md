@@ -2,6 +2,8 @@
 
 This package provides helpful functions for using validating and using BYU's JWTs.
 
+[![codecov](https://codecov.io/gh/byu-oit/byu-jwt-nodejs/branch/main/graph/badge.svg?token=zOI4URNx3D)](https://codecov.io/gh/byu-oit/byu-jwt-nodejs)
+
 **Requires Node 8 or above**
 
 ## Table of Contents

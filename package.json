@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "npx nyc --reporter=lcov --reporter=text-summary mocha test --exit",
-    "lint": "npx standard --fix"
+    "lint": "npx standard"
   },
   "engines": {
     "node": ">=8"

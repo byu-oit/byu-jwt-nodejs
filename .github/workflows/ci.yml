@@ -1,26 +1,46 @@
-name: Test and Lint
+name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
-  ci:
-    name: Test and Lint
-
+  test:
+    name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x, 14.x]
-
+        node-version: [8, 10, 12, 14, 16]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm it # Linting is done as a post-test script
+      - run: npm install
+      - run: npm test
         env:
           TOKEN: ${{ secrets.TOKEN }}
+          FORCE_COLOR: 3
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        if: always() && matrix.node-version == 16 # Upload coverage even if tests fail, but only for 1 job in the matrix
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # No need for a matrix - we're just linting
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - run: npm install
+      - run: npm run lint
