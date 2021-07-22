@@ -82,6 +82,18 @@ describe('byu-jwt', function () {
           expect(value).to.equal(false)
         })
     })
+
+    it('invalid x5t in JWT', () => {
+      const [encodedJwtHeaders, ...restOfJwt] = jwt.split('.')
+      const decodedJwtHeaders = JSON.parse(Buffer.from(encodedJwtHeaders.replace(/=/g, ''), 'base64').toString())
+      const jwtHeadersWithInvalidX5t = { ...decodedJwtHeaders, x5t: 'invalid x5t' }
+      const encodedJwtHeadersWithInvalidX5t = Buffer.from(JSON.stringify(jwtHeadersWithInvalidX5t)).toString('base64').replace(/=/g, '')
+      const jwtWithInvalidX5t = [encodedJwtHeadersWithInvalidX5t, ...restOfJwt].join('.')
+      return byuJWT.verifyJWT(jwtWithInvalidX5t)
+        .then(value => {
+          expect(value).to.equal(false)
+        })
+    })
   })
 
   describe('decodeJWT', () => {
@@ -118,6 +130,15 @@ describe('byu-jwt', function () {
         .then(() => { throw Error('not this error') })
         .catch(err => {
           expect(err.message).to.equal('Invalid JWT')
+        })
+    })
+
+    it('missing JWT', () => {
+      const headers = {}
+      return byuJWT.authenticate(headers)
+        .then(() => { throw Error('not this error') })
+        .catch(err => {
+          expect(err.message).to.equal('Missing expected JWT')
         })
     })
   })
