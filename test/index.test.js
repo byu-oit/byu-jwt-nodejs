@@ -85,9 +85,9 @@ describe('byu-jwt', function () {
 
     it('invalid x5t in JWT', () => {
       const [encodedJwtHeaders, ...restOfJwt] = jwt.split('.')
-      const decodedJwtHeaders = JSON.parse(Buffer.from(encodedJwtHeaders, 'base64url').toString())
+      const decodedJwtHeaders = JSON.parse(Buffer.from(encodedJwtHeaders.replace(/=/g, ''), 'base64').toString())
       const jwtHeadersWithInvalidX5t = { ...decodedJwtHeaders, x5t: 'invalid x5t' }
-      const encodedJwtHeadersWithInvalidX5t = Buffer.from(JSON.stringify(jwtHeadersWithInvalidX5t)).toString('base64url')
+      const encodedJwtHeadersWithInvalidX5t = Buffer.from(JSON.stringify(jwtHeadersWithInvalidX5t)).toString('base64').replace(/=/g, '')
       const jwtWithInvalidX5t = [encodedJwtHeadersWithInvalidX5t, ...restOfJwt].join('.')
       return byuJWT.verifyJWT(jwtWithInvalidX5t)
         .then(value => {
