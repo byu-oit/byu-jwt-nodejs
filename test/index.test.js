@@ -132,6 +132,15 @@ describe('byu-jwt', function () {
           expect(err.message).to.equal('Invalid JWT')
         })
     })
+
+    it('missing JWT', () => {
+      const headers = {}
+      return byuJWT.authenticate(headers)
+        .then(() => { throw Error('not this error') })
+        .catch(err => {
+          expect(err.message).to.equal('Missing expected JWT')
+        })
+    })
   })
 
   describe('authenticateUAPIMiddleware', () => {
