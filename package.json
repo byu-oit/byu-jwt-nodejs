@@ -17,7 +17,7 @@
     "lint": "npx standard"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {

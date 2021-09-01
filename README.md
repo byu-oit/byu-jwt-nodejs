@@ -4,12 +4,13 @@ This package provides helpful functions for using validating and using BYU's JWT
 
 [![codecov](https://codecov.io/gh/byu-oit/byu-jwt-nodejs/branch/main/graph/badge.svg?token=zOI4URNx3D)](https://codecov.io/gh/byu-oit/byu-jwt-nodejs)
 
-**Requires Node 8 or above**
+**Requires Node 12 or above**
 
 ## Table of Contents
 
 - [Migrate from v1 to v2](#migrate-from-v1-to-v2)
 - [Migrate from v2 to v3](#migrate-from-v2-to-v3)
+- [Migrate from v3 to v4](#migrate-from-v3-to-v4)
 - [API](#api)
     - [Constructor](#constructor)
     - [Authenticate](#authenticate)
@@ -29,6 +30,9 @@ This package provides helpful functions for using validating and using BYU's JWT
 * `getPublicKey` has been [removed](https://github.com/byu-oit/byu-jwt-nodejs/commit/fe16edddd1f59a4f6c37acc29d9a20b5878626bd) - If you were using it, look into the new `getPem` function
 * Ensure that the [`openssl`](https://nodejs.org/en/docs/meta/topics/dependencies/#openssl) shipped with your version of Node supports the algorithms you need - We're now using that instead of expecting an `openssl` executable to be found on the system.
   * This is probably a non-issue because our JWTs have been using RSA-256, which `openssl` has supported for _years_.
+
+## Migrate from v3 to v4
+* Update to Node 12 or above
 
 ## API
 
