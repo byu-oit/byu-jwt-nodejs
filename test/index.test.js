@@ -141,6 +141,51 @@ describe('byu-jwt', function () {
           expect(err.message).to.equal('Missing expected JWT')
         })
     })
+
+    describe('with basePath', () => {
+      const byuJwtWithEchoBasePath = ByuJWT({ basePath: '/echo' })
+      const byuJWTWithOtherBasePath = ByuJWT({ basePath: '/other' })
+
+      it('valid API context', () => {
+        const headers = {}
+        headers[ByuJWT.BYU_JWT_HEADER_CURRENT] = jwt
+        return byuJwtWithEchoBasePath.authenticate(headers)
+          .then(result => {
+            expect(result.claims).to.deep.equal(result.current.client)
+          })
+      })
+
+      it('invalid API context', () => {
+        const headers = {}
+        headers[ByuJWT.BYU_JWT_HEADER_CURRENT] = jwt
+        return byuJWTWithOtherBasePath.authenticate(headers)
+          .then(() => { throw Error('not this error') })
+          .catch(err => {
+            expect(err.message).to.equal('Invalid API context in JWT')
+          })
+      })
+
+      // TODO: Programmatically get Tyk JWT
+      it.skip('valid aud', () => {
+        const headers = {}
+        headers[ByuJWT.BYU_JWT_HEADER_CURRENT] = jwt
+        return byuJwtWithEchoBasePath.authenticate(headers)
+          .then(result => {
+            expect(result.claims).to.deep.equal(result.current.client)
+          })
+      })
+
+      // TODO: Programmatically get Tyk JWT
+      it.skip('invalid aud', () => {
+        const headers = {}
+        headers[ByuJWT.BYU_JWT_HEADER_CURRENT] = jwt
+        return byuJWTWithOtherBasePath.authenticate(headers)
+          .then(() => { throw Error('not this error') })
+          .catch(err => {
+            expect(err.message).to.equal('Invalid aud in JWT')
+          })
+      })
+    })
   })
 
   describe('authenticateUAPIMiddleware', () => {
