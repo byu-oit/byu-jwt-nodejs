@@ -94,6 +94,9 @@ describe('byu-jwt', function () {
           expect(value).to.equal(false)
         })
     })
+
+    // TODO
+    it.skip('invalid kid in JWT', () => {})
   })
 
   describe('decodeJWT', () => {
