@@ -23,12 +23,18 @@ This package provides helpful functions for using validating and using BYU's JWT
 - [Testing](#testing)
 
 ## Migrate from v1 to v2
+
 * Update to Node 8 or above
 
 ## Migrate from v2 to v3
-* `getPublicKey` has been [removed](https://github.com/byu-oit/byu-jwt-nodejs/commit/fe16edddd1f59a4f6c37acc29d9a20b5878626bd) - If you were using it, look into the new `getPem` function
-* Ensure that the [`openssl`](https://nodejs.org/en/docs/meta/topics/dependencies/#openssl) shipped with your version of Node supports the algorithms you need - We're now using that instead of expecting an `openssl` executable to be found on the system.
-  * This is probably a non-issue because our JWTs have been using RSA-256, which `openssl` has supported for _years_.
+
+* `getPublicKey` has
+  been [removed](https://github.com/byu-oit/byu-jwt-nodejs/commit/fe16edddd1f59a4f6c37acc29d9a20b5878626bd) - If you
+  were using it, look into the new `getPem` function
+* Ensure that the [`openssl`](https://nodejs.org/en/docs/meta/topics/dependencies/#openssl) shipped with your version of
+  Node supports the algorithms you need - We're now using that instead of expecting an `openssl` executable to be found
+  on the system.
+    * This is probably a non-issue because our JWTs have been using RSA-256, which `openssl` has supported for _years_.
 
 ## API
 
@@ -40,11 +46,12 @@ This package provides helpful functions for using validating and using BYU's JWT
 
 - *options* - An `object` that defines the options for this instance of the byu-jwt library:
 
-    | Option | Description | Default |
-    | ------ | ----------- | ------- |
-    | basePath | A `string` that the JWT's API context must begin with. This validates that the JWT came from a server that starts with this path. | `""` |
-    | cacheTTL | The `number` of minutes to cache the OpenID configuration for. | `10` |
-    | development | A `boolean` then when set to `true` will bypass JWT validation. This cannot be set to `true` when the `NODE_ENV` environment variable is set to `"production"`. Also, when set to `true` expect to see a lot of warning message on your console. | `false` |
+| Option      | Description                                                                                                                                                                                                                                      | Default       |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| basePath    | A `string` that the JWT's API context must begin with. This validates that the JWT came from a server that starts with this path.                                                                                                                | `""`          |
+| cacheTTL    | The `number` of minutes to cache the OpenID configuration for.                                                                                                                                                                                   | `10`          |
+| development | A `boolean` then when set to `true` will bypass JWT validation. This cannot be set to `true` when the `NODE_ENV` environment variable is set to `"production"`. Also, when set to `true` expect to see a lot of warning message on your console. | `false`       |
+| issuer      | The host of the issuing oauth provider.                                                                                                                                                                                                          | `api.byu.edu` |
 
 **Returns** an instance of the [ByuJWT](#constructor)
 
@@ -60,7 +67,8 @@ Check the headers to see if the requester is authenticated.
 
     1. `x-jwt-assertion` is a header that contains the JWT for the current client.
 
-    2. `x-jwt-assertion-original` is a header that contains the JWT for the original requester. This value should be set if a client is making an authenticated request on behalf of a different client.
+    2. `x-jwt-assertion-original` is a header that contains the JWT for the original requester. This value should be set
+       if a client is making an authenticated request on behalf of a different client.
 
 **Returns** a promise that, if authenticated, resolves to an object with some of these properties:
 
@@ -68,9 +76,10 @@ Check the headers to see if the requester is authenticated.
 
 - *original* - The original client's [decoded JWT](#decode-jwt). This property may not be defined.
 
-- *originalJWT* - The JWT string provided by the original requester, or if that doesn't exist then of the current client.
+- *originalJWT* - The JWT string provided by the original requester, or if that doesn't exist then of the current
+  client.
 
-- *claims* - A [decoded JWT's](#decode-jwt) primary claim, prioritied in this order:
+- *claims* - A [decoded JWT's](#decode-jwt) primary claim, prioritized in this order:
 
     1. Original resource owner
     2. Current resource owner
@@ -79,7 +88,8 @@ Check the headers to see if the requester is authenticated.
 
 ### Authenticate University API Middleware
 
-A middleware that will check if the request has authentication and will either add the property `verifiedJWTs` to the request or will respond to the request with a `401` or `500` response code.
+A middleware that will check if the request has authentication and will either add the property `verifiedJWTs` to the
+request or will respond to the request with a `401` or `500` response code.
 
 `ByuJWT.prototype.authenticateUAPIMiddleware`
 
@@ -102,11 +112,11 @@ const app = express()
 app.use(byuJwt.authenticateUAPIMiddleware)
 
 const listener = app.listen(3000, err => {
-    if (err) {
-        console.error(err.stack)
-    } else {
-        console.log('Server listening on port ' + listener.address().port)
-    }
+  if (err) {
+    console.error(err.stack)
+  } else {
+    console.log('Server listening on port ' + listener.address().port)
+  }
 })
 ```
 
@@ -122,15 +132,20 @@ Verify and decode a JWT.
 
 **Returns** a promise that, if valid, resolves to an object with these properties:
 
-- *client* - An object that contains the client claims. It has the following properties: `byuId`, `claimSource`, `netId`, `personId`, `preferredFirstName`, `prefix`, `restofName`, `sortName`, `subscriberNetId`, `suffix`, `surname`, `surnamePosition`
+- *client* - An object that contains the client claims. It has the following properties: `byuId`, `claimSource`, `netId`
+  , `personId`, `preferredFirstName`, `prefix`, `restofName`, `sortName`, `subscriberNetId`, `suffix`, `surname`
+  , `surnamePosition`
 
 - *claims* - The primary claims object, prefering resource owner first and client second.
 
 - *raw* - The raw claims aquired by validating the JWT.
 
-- *resourceOwner* - The resource owner claims (if a resource owner is defined). It has the following properties: `byuId`, `netId`, `personId`, `preferredFirstName`, `prefix`, `restofName`, `sortName`, `suffix`, `surname`, `surnamePosition`
+- *resourceOwner* - The resource owner claims (if a resource owner is defined). It has the following properties: `byuId`
+  , `netId`, `personId`, `preferredFirstName`, `prefix`, `restofName`, `sortName`, `suffix`, `surname`
+  , `surnamePosition`
 
-- *wso2*- Claims specific to WSO2.It has the following properties: `apiContext`, `application.id`, `application.name`, `application.tier`, `clientId`, `endUser`, `endUserTenantId`, `keyType`, `subscriber`, `tier`, `userType`, `version`
+- *wso2*- Claims specific to WSO2.It has the following properties: `apiContext`, `application.id`, `application.name`
+  , `application.tier`, `clientId`, `endUser`, `endUserTenantId`, `keyType`, `subscriber`, `tier`, `userType`, `version`
 
 ### Get OpenId Configuration
 
