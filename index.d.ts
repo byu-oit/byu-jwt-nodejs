@@ -13,7 +13,8 @@ export interface Options {
   basePath?: string
   cacheTTL?: number
   development?: boolean
-  issuer?: string
+  host?: string
+  openIdConfigUrl?: string
 }
 
 export interface baseClaims {
@@ -142,6 +143,7 @@ export interface ByuJwtInstance {
   getOpenIdConfiguration(): Promise<ByuOpenIdConfig>
   getPem(): Promise<string>
   verifyJWT(jwt: string): Promise<boolean>
+  openIdConfigUrl: string
 }
 
 export default function (options?: Options): ByuJwtInstance
