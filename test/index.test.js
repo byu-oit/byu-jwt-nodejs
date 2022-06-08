@@ -53,6 +53,10 @@ describe('byu-jwt', function () {
   })
 
   it('can get OpenID configuration', () => {
+    // Deprecated: WELL_KNOWN_URL will be removed in next major version
+    const wellKnown = ByuJWT.WELL_KNOWN_URL
+    expect(wellKnown).to.be.a('string')
+
     return byuJWT.getOpenIdConfiguration()
       .then(config => {
         expect(config).to.be.an.instanceOf(Object)
