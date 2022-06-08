@@ -46,12 +46,13 @@ This package provides helpful functions for using validating and using BYU's JWT
 
 - *options* - An `object` that defines the options for this instance of the byu-jwt library:
 
-| Option      | Description                                                                                                                                                                                                                                      | Default       |
-|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| basePath    | A `string` that the JWT's API context must begin with. This validates that the JWT came from a server that starts with this path.                                                                                                                | `""`          |
-| cacheTTL    | The `number` of minutes to cache the OpenID configuration for.                                                                                                                                                                                   | `10`          |
-| development | A `boolean` then when set to `true` will bypass JWT validation. This cannot be set to `true` when the `NODE_ENV` environment variable is set to `"production"`. Also, when set to `true` expect to see a lot of warning message on your console. | `false`       |
-| issuer      | The host of the issuing oauth provider.                                                                                                                                                                                                          | `api.byu.edu` |
+| Option          | Description                                                                                                                                                                                                                                      | Default       |
+|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| basePath        | A `string` that the JWT's API context must begin with. This validates that the JWT came from a server that starts with this path.                                                                                                                | `""`          |
+| cacheTTL        | The `number` of minutes to cache the OpenID configuration for.                                                                                                                                                                                   | `10`          |
+| development     | A `boolean` then when set to `true` will bypass JWT validation. This cannot be set to `true` when the `NODE_ENV` environment variable is set to `"production"`. Also, when set to `true` expect to see a lot of warning message on your console. | `false`       |
+| host            | The host of the issuing oauth provider. If this option is specified, the OpenID Configuration URL will be constructed for you, according to the OpenID Configuration Specification.                                                              | `api.byu.edu` |
+| openIdConfigUrl | The OpenID Configuration URL (AKA Well-known URL). If this is specified, it will override the host option.                                                                                                                                       |               |
 
 **Returns** an instance of the [ByuJWT](#constructor)
 
@@ -157,6 +158,13 @@ Get the OpenID configuration from the well known url.
 
 **Returns** a promise that resolves to the OpenID configuration.
 
+### OpenId Configuration URL
+
+Exposes the OpenID Configuration URL, according to the OpenID specification. It is created based on the `host` parameter
+given in the constructor or will be overridden by the `openIdConfigUrl` parameter.
+
+`ByuJWT.prototype.openIdConfigUrl`
+
 ### Get Pem
 
 **DEPRECATED**
@@ -190,7 +198,7 @@ Get or set the cache time to live. The cache only affects how often the OpenID c
 ```js
 const byuJwt = require('byu-jwt')()
 byuJWT.cacheTTL = 15                    // set cache to 15 minutes
-```
+````
 
 ### Static Constants
 
@@ -207,6 +215,11 @@ The following properties are accessible on the ByuJWT object without needing an 
 - *NotBeforeError* - A reference to the NotBeforeError constructor.
 
 - *TokenExpiredError* - A reference to the TokenExpiredError constructor.
+
+**DEPRECATED**
+
+- *WELL_KNOWN_URL* - A reference to the BYU OpenID Configuration URL. It will be removed in the next major version. Use
+ByuJWT.prototype.openIdConfigUrl instead.
 
 ```js
 const ByuJWT = require('byu-jwt')
