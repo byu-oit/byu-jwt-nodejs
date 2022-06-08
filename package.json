@@ -19,6 +19,11 @@
   "engines": {
     "node": ">=8"
   },
+  "files": [
+    "lib",
+    "index.js",
+    "index.d.ts"
+  ],
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
     "debug": "^4.1.1",
