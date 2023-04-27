@@ -1,0 +1,74 @@
+{
+  "name": "@byu-oit/fastify-jwt",
+  "version": "0.0.0",
+  "description": "Blazingly fast client development",
+  "keywords": [],
+  "author": "Spencer Tuft <stuft2@byu.edu>",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "require": "./cjs/index.js",
+      "import": "./esm/index.js"
+    }
+  },
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "types": "./types/index.d.ts",
+  "files": [
+    "cjs",
+    "esm",
+    "types"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/byu-oit/byu-jwt-nodejs.git"
+  },
+  "scripts": {
+    "build": "npx concurrently \"npm:build:*\" -c whiteBright",
+    "build:cjs": "npx rimraf cjs && tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > cjs/package.json",
+    "build:esm": "npx rimraf esm types && tsc",
+    "clean": "npx rimraf esm cjs types",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix",
+    "test": "ava",
+    "test:coverage": "c8 ava"
+  },
+  "bugs": {
+    "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
+  },
+  "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
+  "dependencies": {
+    "@byu-oit/jwt": "*",
+    "@types/node": "^18.16.2",
+    "fastify": "^4.17.0",
+    "fastify-plugin": "^4.5.0"
+  },
+  "devDependencies": {
+    "@tsconfig/esm": "^1.0.3",
+    "@tsconfig/node-lts": "^18.12.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "ava": "^5.2.0",
+    "c8": "^7.13.0",
+    "eslint": "^8.39.0",
+    "eslint-config-standard-with-typescript": "^34.0.1",
+    "eslint-plugin-tsdoc": "^0.2.17",
+    "fastify": "^4.16.3",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.4"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.spec.ts"
+    ],
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=ts-node/esm"
+    ]
+  }
+}
