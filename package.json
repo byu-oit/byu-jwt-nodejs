@@ -26,5 +26,8 @@
     "lerna": "^6.6.1",
     "nx": "^15.0.13",
     "typedoc": "^0.24.6"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
