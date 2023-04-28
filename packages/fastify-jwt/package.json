@@ -60,6 +60,9 @@
     "tslib": "^2.5.0",
     "typescript": "^5.0.4"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "ava": {
     "files": [
       "test/**/*.spec.ts"
