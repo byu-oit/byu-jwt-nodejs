@@ -17,6 +17,7 @@ export class ByuJwtError extends TokenError {
 
   // @ts-expect-error Overwriting the TokenValidationErrorCode type
   public code: ByuJwtErrorCodes
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor (code: ByuJwtErrorCodes, message: string, additional?: Record<string, unknown>) {
     // @ts-expect-error TokenError improperly defines the types for its implementation
     super(code, message, additional)

@@ -26,7 +26,7 @@ const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (f
       request.caller = await authenticator.authenticate(request.headers)
     } catch (err) {
       if (err instanceof TokenError) {
-        return reply.code(401).send(options.errorHandler(err))
+        return await reply.code(401).send(options.errorHandler(err))
       }
       throw err
     }
