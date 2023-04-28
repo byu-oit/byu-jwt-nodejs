@@ -1,6 +1,7 @@
 import { ByuJwt, type JwtPayload } from '@byu-oit/jwt'
-import { BYU_JWT_ERROR_CODES, ByuJwtError } from './ByuJwtError.js'
+import { TokenError } from 'fast-jwt'
 import { type IncomingHttpHeaders } from 'http'
+import { BYU_JWT_ERROR_CODES, ByuJwtError } from './ByuJwtError.js'
 
 export class ByuJwtAuthenticator extends ByuJwt {
   static HEADER_CURRENT = 'x-jwt-assertion'
@@ -12,10 +13,18 @@ export class ByuJwtAuthenticator extends ByuJwt {
       ByuJwtAuthenticator.HEADER_ORIGINAL,
       ByuJwtAuthenticator.HEADER_CURRENT
     ]
-    const [original, current] = await Promise.all(JwtHeaders.map(async (header) => {
+    const [original, current] = await Promise.all(JwtHeaders.map(async header => {
       const jwt = headers[header]
-      if (typeof jwt !== 'string') return
-      return await this.verify(jwt).then(({ payload }) => payload)
+      if (typeof jwt !== 'string') return undefined
+      try {
+        const { payload } = await this.verify(jwt)
+        return payload
+      } catch (e) {
+        if (e instanceof TokenError) {
+          throw ByuJwtError.wrap(e)
+        }
+        throw e
+      }
     }))
 
     if (current == null) {
@@ -32,7 +41,7 @@ export class ByuJwtAuthenticator extends ByuJwt {
       /** Check that the JWT is meant for the audience */
       if (current.aud != null) {
         const audiences = typeof current.aud === 'string' ? [current.aud] : current.aud
-        const hasAValidAudience = audiences.some(audience => audience.startsWith(this.basePath)) === false
+        const hasAValidAudience = !audiences.some(audience => audience.startsWith(this.basePath))
         if (hasAValidAudience) {
           throw new ByuJwtError(BYU_JWT_ERROR_CODES.invalidAudience, 'Invalid aud in JWT')
         }

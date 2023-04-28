@@ -1,4 +1,4 @@
-import { TokenError, type TokenValidationErrorCode } from 'fast-jwt/src/index.js'
+import { TokenError, type TokenValidationErrorCode } from 'fast-jwt'
 
 export const BYU_JWT_ERROR_CODES = {
   ...TokenError.codes,
@@ -14,8 +14,16 @@ export type ByuJwtErrorCodes = TokenValidationErrorCode
 
 export class ByuJwtError extends TokenError {
   static codes = BYU_JWT_ERROR_CODES
+
+  // @ts-expect-error Overwriting the TokenValidationErrorCode type
+  public code: ByuJwtErrorCodes
   constructor (code: ByuJwtErrorCodes, message: string, additional?: Record<string, unknown>) {
     // @ts-expect-error TokenError improperly defines the types for its implementation
-    super(code, string, additional)
+    super(code, message, additional)
+  }
+
+  static wrap (error: TokenError): ByuJwtError {
+    const { code, message, ...additional } = error
+    return new ByuJwtError(code, message, additional)
   }
 }
