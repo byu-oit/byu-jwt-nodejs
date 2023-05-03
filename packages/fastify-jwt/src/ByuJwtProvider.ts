@@ -17,11 +17,21 @@ export interface ByuJwtProviderOptions extends ByuJwtOptions {
    * which extends the TokenError by adding additional error codes.
    */
   errorHandler: (error: TokenError) => any
+  prefix?: string
 }
 
 const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (fastify, options) => {
   const authenticator = new ByuJwtAuthenticator(options)
   fastify.addHook('onRequest', async (request, reply) => {
+    if (options.prefix != null) {
+      /** The prefix is used to limit the routes that the plugin will be run against */
+      const url = new URL(request.url)
+      if (!url.pathname.startsWith(options.prefix)) {
+        /** The route prefix excludes this request from calling the authentication hook */
+        return
+      }
+    }
+
     try {
       request.caller = await authenticator.authenticate(request.headers)
     } catch (err) {
