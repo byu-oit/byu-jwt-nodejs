@@ -1,6 +1,6 @@
 import test from 'ava'
 import Fastify from 'fastify'
-import { type ByuJwtError, ByuJwtProvider } from '../src/index.js'
+import ByuJwtProvider, { type ByuJwtError } from '../src/index.js'
 import { expiredJwt } from './assets/jwt.js'
 
 const issuer = 'https://example.com'

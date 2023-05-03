@@ -33,9 +33,7 @@ const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (f
   })
 }
 
-export const ByuJwtProvider = fp(ByuJwtProviderPlugin, {
+export default fp(ByuJwtProviderPlugin, {
   name: '@byu-oit/fastify-jwt',
   fastify: '4.x'
 })
-
-export default ByuJwtProvider
