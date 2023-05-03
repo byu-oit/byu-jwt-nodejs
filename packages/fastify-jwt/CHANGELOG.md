@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-beta.1](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.0-beta.0...@byu-oit/fastify-jwt@0.1.0-beta.1) (2023-05-03)
+
+
+### Bug Fixes
+
+* only export default ([e805ad8](https://github.com/byu-oit/byu-jwt-nodejs/commit/e805ad82e5e3489193b99da8fa51691947778f21))
+* reexport default ([f3cf305](https://github.com/byu-oit/byu-jwt-nodejs/commit/f3cf3050f7d54e36b306c5be6ef3d3ccd3870ec3))
+
+
+
+
+
 # [0.1.0-beta.0](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.0.1-beta.0...@byu-oit/fastify-jwt@0.1.0-beta.0) (2023-05-03)
 
 
