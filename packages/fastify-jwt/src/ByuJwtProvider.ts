@@ -1,6 +1,6 @@
-import { type FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
 import fp from 'fastify-plugin'
-import { type ByuJwtOptions, type JwtPayload } from '@byu-oit/jwt'
+import type { ByuJwtOptions, JwtPayload } from '@byu-oit/jwt'
 import { ByuJwtAuthenticator } from './ByuJwtAuthenticator.js'
 import { TokenError } from 'fast-jwt'
 
@@ -22,23 +22,39 @@ export interface ByuJwtProviderOptions extends ByuJwtOptions {
 
 const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (fastify, options) => {
   const authenticator = new ByuJwtAuthenticator(options)
-  fastify.addHook('onRequest', async (request, reply) => {
-    if (options.prefix != null) {
-      /** The prefix is used to limit the routes that the plugin will be run against */
-      const url = new URL(request.url)
-      if (!url.pathname.startsWith(options.prefix)) {
-        /** The route prefix excludes this request from calling the authentication hook */
-        return
-      }
-    }
 
+  async function preHandler (request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       request.caller = await authenticator.authenticate(request.headers)
     } catch (err) {
       if (err instanceof TokenError) {
-        return await reply.code(401).send(options.errorHandler(err))
+        await reply.code(401).send(options.errorHandler(err))
+        return
       }
       throw err
+    }
+  }
+
+  /**
+   * Any routes created after this plugin is registered will add the authentication pre-handler, if the route falls
+   * under the specified prefix.
+   */
+  fastify.addHook('onRoute', (route) => {
+    const foundPrefix = options.prefix != null
+    const matchesRoute = route.prefix === options.prefix
+    if (foundPrefix && !matchesRoute) {
+      /** Don't add authentication to routes that don't match the specified prefix */
+      return
+    }
+    /** Else add authentication to routes when no prefix is given or a matched route is registered */
+
+    /** Add pre-handler to existing pre-handlers */
+    if (route.preHandler == null) {
+      route.preHandler = [preHandler]
+    } else if (Array.isArray(route.preHandler)) {
+      route.preHandler.push(preHandler)
+    } else {
+      route.preHandler = [route.preHandler, preHandler]
     }
   })
 }
