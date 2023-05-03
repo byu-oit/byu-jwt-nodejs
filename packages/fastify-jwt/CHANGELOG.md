@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-beta.2](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.0-beta.1...@byu-oit/fastify-jwt@0.1.0-beta.2) (2023-05-03)
+
+
+### Features
+
+* authenticate routes behind a given prefix ([8d57106](https://github.com/byu-oit/byu-jwt-nodejs/commit/8d57106518e55f66ae14f876a8f62dbfde31fc57))
+
+
+
+
+
 # [0.1.0-beta.1](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.0-beta.0...@byu-oit/fastify-jwt@0.1.0-beta.1) (2023-05-03)
 
 
