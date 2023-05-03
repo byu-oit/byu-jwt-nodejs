@@ -32,8 +32,8 @@
     "clean": "npx rimraf esm cjs types",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
-    "test": "ava",
-    "test:coverage": "c8 ava"
+    "test": "ava --timeout=15s",
+    "test:coverage": "c8 ava --timeout=15s"
   },
   "bugs": {
     "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
