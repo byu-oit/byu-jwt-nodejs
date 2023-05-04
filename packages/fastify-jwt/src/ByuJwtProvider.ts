@@ -2,7 +2,6 @@ import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
 import fp from 'fastify-plugin'
 import type { ByuJwtOptions, JwtPayload } from '@byu-oit/jwt'
 import { ByuJwtAuthenticator } from './ByuJwtAuthenticator.js'
-import { TokenError } from 'fast-jwt'
 
 /** Enhance the fastify request with the verified caller information */
 declare module 'fastify' {
@@ -12,11 +11,6 @@ declare module 'fastify' {
 }
 
 export interface ByuJwtProviderOptions extends ByuJwtOptions {
-  /**
-   * Formats the error response when authentication fails. The error parameter may be a TokenError or a ByuJwtError,
-   * which extends the TokenError by adding additional error codes.
-   */
-  errorHandler: (error: TokenError) => any
   prefix?: string
 }
 
@@ -27,10 +21,7 @@ const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (f
     try {
       request.caller = await authenticator.authenticate(request.headers)
     } catch (err) {
-      if (err instanceof TokenError) {
-        await reply.code(401).send(options.errorHandler(err))
-        return
-      }
+      await reply.code(401)
       throw err
     }
   }
