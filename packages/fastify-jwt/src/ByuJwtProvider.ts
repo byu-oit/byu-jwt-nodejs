@@ -23,7 +23,7 @@ export interface ByuJwtProviderOptions extends ByuJwtOptions {
 const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (fastify, options) => {
   const authenticator = new ByuJwtAuthenticator(options)
 
-  async function preHandler (request: FastifyRequest, reply: FastifyReply): Promise<void> {
+  async function ByuJwtAuthenticationHandler (request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       request.caller = await authenticator.authenticate(request.headers)
     } catch (err) {
@@ -49,12 +49,12 @@ const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (f
     /** Else add authentication to routes when no prefix is given or a matched route is registered */
 
     /** Add pre-handler to existing pre-handlers */
-    if (route.preHandler == null) {
-      route.preHandler = [preHandler]
-    } else if (Array.isArray(route.preHandler)) {
-      route.preHandler.push(preHandler)
+    if (route.preValidation == null) {
+      route.preValidation = [ByuJwtAuthenticationHandler]
+    } else if (Array.isArray(route.preValidation)) {
+      route.preValidation.push(ByuJwtAuthenticationHandler)
     } else {
-      route.preHandler = [route.preHandler, preHandler]
+      route.preValidation = [route.preValidation, ByuJwtAuthenticationHandler]
     }
   })
 }
