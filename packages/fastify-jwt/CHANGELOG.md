@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-beta.5](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.0-beta.4...@byu-oit/fastify-jwt@0.1.0-beta.5) (2023-05-04)
+
+
+### Bug Fixes
+
+* follow fastify recommendation of handling errors in hooks ([b2e5adf](https://github.com/byu-oit/byu-jwt-nodejs/commit/b2e5adf78354f43b8008f30531c4590df6804453))
+
+
+
+
+
 # [0.1.0-beta.4](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.0-beta.3...@byu-oit/fastify-jwt@0.1.0-beta.4) (2023-05-04)
 
 

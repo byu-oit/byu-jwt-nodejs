@@ -1,6 +1,6 @@
 {
   "name": "@byu-oit/jwt",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "description": "Utilities for verifying and decoding BYU JWTs",
   "keywords": [],
   "author": "Spencer Tuft <stuft2@byu.edu>",
