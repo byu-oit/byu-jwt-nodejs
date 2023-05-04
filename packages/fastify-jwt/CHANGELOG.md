@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-beta.4](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.0-beta.3...@byu-oit/fastify-jwt@0.1.0-beta.4) (2023-05-04)
+
+
+### Bug Fixes
+
+* **fastify-jwt:** move handler to preValidation lifecycle step ([5078e8f](https://github.com/byu-oit/byu-jwt-nodejs/commit/5078e8f5a7852a176fc8e6b6d9bcfb223daff036))
+
+
+
+
+
 # [0.1.0-beta.3](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.0-beta.2...@byu-oit/fastify-jwt@0.1.0-beta.3) (2023-05-03)
 
 
