@@ -1,6 +1,6 @@
 # `@byu-oit/fastify-jwt`
 
-> Provides a fastify plugin for verifying JWTs
+> Provides a fastify plugin for verifying JWTs at BYU OIT
 
 ## Usage
 
@@ -12,8 +12,12 @@ import {ByuJwtProvider} from '@byu-oit/fastify-jwt'
 const logger = ByuLogger()
 const fastify = Fastify({logger})
 
-/** May pass in ByuJwt options as the second parameter */
-fastify.register(ByuJwtProvider/*, { development: process.env.NODE_ENV === 'development' } */)
+fastify.register(ByuJwtProvider, {
+  /** Only authenticate routes matching this prefix */
+  prefix: '/example/v1',
+  /** May pass in ByuJwt options from @byu-oit/jwt */
+  development: process.env.NODE_ENV === 'development'
+})
 
-fastify.listen({ port: 3000 }).catch(console.error)
+await fastify.listen({ port: 3000 }).catch(console.error)
 ```

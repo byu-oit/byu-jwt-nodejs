@@ -10,7 +10,16 @@ import {ByuJwt} from '@byu-oit/jwt'
 const byuJwt = new ByuJwt({ issuer: 'https://api.byu.edu' })
 
 const jwt = byuJwt.verify('[your jwt]')
+
+/** Access the jwt payload information */
+const { byuId } = jwt.payload
+
+/** Access the jwt header information */
+const { alg } = jwt.header
 ```
+
+> **Note**
+> Please refer to the API documentation if you need to see what information is made available in the jwt payload or header.
 
 ## Options
 
@@ -21,5 +30,3 @@ const jwt = byuJwt.verify('[your jwt]')
 | development     | boolean | false              | skips JWT verification for development purposes but will throw an error if NODE_ENV is set to `production`                                                                                                                                                    |
 | issuer          | string  | `undefined`        | The OAuth Provider host, e.g. `https://api.byu.edu`. Either the issuer or the openIdConfigUrl are required but not both.                                                                                                                                      |
 | openIdConfigUrl | string  | `undefined`        | Can specify the openIdConfigUrl explicitly if your open id configuration is not located at `/.well-known/openid-configuration`. Overwrites issuer when fetching the OpenID configuration. Either the issuer or the openIdConfigUrl are required but not both. |
-
-The JWT Payload contains
