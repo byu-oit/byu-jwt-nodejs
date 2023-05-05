@@ -2,7 +2,7 @@
     "$schema": "https://typedoc.org/schema.json",
     "entryPointStrategy": "packages",
     "entryPoints": [
-        "packages/fastify-jwt",
+        "packages/fastify",
         "packages/jwt"
     ],
     "out": "docs"

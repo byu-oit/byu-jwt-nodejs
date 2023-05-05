@@ -3,7 +3,7 @@
 This repository hosts the following Node.js packages for API development at BYU OIT:
 
 - [@byu-oit/jwt](./packages/jwt/README.md)
-- [@byu-oit/fastify-jwt](./packages/fastify-jwt/README.md)
+- [@byu-oit/fastify-jwt](./packages/fastify/README.md)
 
 The documentation and source code for previous versions of the byu-jwt package are found on
 the [v3 branch](https://github.com/byu-oit/byu-jwt-nodejs/tree/v3) in this repository.
