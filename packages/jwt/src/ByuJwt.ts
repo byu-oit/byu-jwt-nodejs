@@ -1,7 +1,7 @@
 import NodeCache from 'node-cache'
 import {
   OpenIdConfiguration,
-  Certifications,
+  Certificates,
   type PemCertificate,
   Jwt
 } from './models/index.js'
@@ -67,7 +67,7 @@ export class ByuJwt {
   }
 
   async getPem (): Promise<PemCertificate[]> {
-    let certs = this.cache.get<Certifications>(BYU_CERT_KEY)
+    let certs = this.cache.get<Certificates>(BYU_CERT_KEY)
     if (certs == null) {
       /** Refresh our cert cache */
       const config = await this.getOpenIdConfiguration()
@@ -75,7 +75,7 @@ export class ByuJwt {
       /** Check for max age header or set a default */
       const cacheDuration = getMaxAge(response.headers) ?? this.cacheDuration
       /** Validate the certification endpoint response */
-      certs = Certifications.from(await response.json())
+      certs = Certificates.from(await response.json())
       /** Cache certs */
       this.cache.set(BYU_CERT_KEY, certs, cacheDuration)
     }

@@ -8,9 +8,9 @@ export interface PemCertificate {
   x5c: string
 }
 
-export type CertificationType = Static<typeof Certification.Schema>
+export type CertificateType = Static<typeof Certificate.Schema>
 
-export class Certification {
+export class Certificate {
   static Schema = Type.Object({
     e: Type.String(),
     kty: Type.String(),
@@ -19,7 +19,7 @@ export class Certification {
     x5t: Type.String(),
     n: Type.String(),
     x5c: Type.Array(Type.String())
-  }, { $id: 'CertificationKey' })
+  }, { $id: 'CertificateKey' })
 
   readonly e: string
   readonly kty: string
@@ -29,47 +29,47 @@ export class Certification {
   readonly n: string
   readonly x5c: string[]
 
-  constructor (certification: CertificationType) {
-    this.e = certification.e
-    this.kty = certification.kty
-    this.use = certification.use
-    this.kid = certification.kid
-    this.x5t = certification.x5t
-    this.n = certification.n
-    this.x5c = certification.x5c
+  constructor (cert: CertificateType) {
+    this.e = cert.e
+    this.kty = cert.kty
+    this.use = cert.use
+    this.kid = cert.kid
+    this.x5t = cert.x5t
+    this.n = cert.n
+    this.x5c = cert.x5c
   }
 
-  static from (value: unknown): Certification {
-    const C = TypeCompiler.Compile(Certification.Schema)
+  static from (value: unknown): Certificate {
+    const C = TypeCompiler.Compile(Certificate.Schema)
     const result = C.Check(value)
     if (!result) {
       const errors = [...C.Errors(value)]
       throw new ValidationError(errors, 'Invalid Certification')
     }
-    return new Certification(value)
+    return new Certificate(value)
   }
 }
 
-export type CertificationsType = Static<typeof Certifications.Schema>
+export type CertificatesType = Static<typeof Certificates.Schema>
 
-export class Certifications {
-  keys: Certification[]
+export class Certificates {
+  keys: Certificate[]
   static Schema = Type.Object({
-    keys: Type.Array(Type.Ref(Certification.Schema))
+    keys: Type.Array(Type.Ref(Certificate.Schema))
   })
 
-  constructor (certifications: CertificationsType) {
-    this.keys = certifications.keys
+  constructor (certs: CertificatesType) {
+    this.keys = certs.keys
   }
 
-  static from (value: unknown): Certifications {
-    const C = TypeCompiler.Compile(Certifications.Schema, [Certification.Schema])
+  static from (value: unknown): Certificates {
+    const C = TypeCompiler.Compile(Certificates.Schema, [Certificate.Schema])
     const result = C.Check(value)
     if (!result) {
       const errors = [...C.Errors(value)]
-      throw new ValidationError(errors, 'Invalid Certifications')
+      throw new ValidationError(errors, 'Invalid Certificates')
     }
-    return new Certifications(value)
+    return new Certificates(value)
   }
 
   get pemCertificates (): PemCertificate[] {
