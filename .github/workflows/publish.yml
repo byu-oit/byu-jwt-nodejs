@@ -54,7 +54,7 @@ jobs:
           node-version: ${{ env.node_version }}
           # Publish to the provided registry...
           registry-url: ${{ matrix.registry.url }}
-          # ...and under the byu-oit-sdk scope
+          # ...and under the byu-oit scope
           scope: '@byu-oit'
 
       # Install the root dependencies in production mode (see npm ci command) as well as running lerna bootstrap for
