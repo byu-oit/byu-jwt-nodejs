@@ -56,7 +56,7 @@ export class ByuJwt {
     if (config == null) {
       /** Refresh our open id configuration cache */
       const response = await fetch(this.openIdConfigUrl)
-      /** Check for max age header or set a default */
+      /** Check for max-age in Cache-Control header or set a default */
       const cacheDuration = getMaxAge(response.headers) ?? this.cacheDuration
       /** Validate the configuration */
       config = OpenIdConfiguration.from(await response.json())
@@ -72,7 +72,7 @@ export class ByuJwt {
       /** Refresh our cert cache */
       const config = await this.getOpenIdConfiguration()
       const response = await fetch(config.jwksUri)
-      /** Check for max age header or set a default */
+      /** Check for max-age in Cache-Control header or set a default */
       const cacheDuration = getMaxAge(response.headers) ?? this.cacheDuration
       /** Validate the certification endpoint response */
       certs = Certificates.from(await response.json())
