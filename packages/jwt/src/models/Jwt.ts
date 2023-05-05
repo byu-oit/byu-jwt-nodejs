@@ -115,8 +115,9 @@ export class JwtPayload {
   readonly exp?: number
   readonly aud?: string[] | string
 
-  /** Issuer Claims */
-
+  /**
+   * Issuer Claims
+   */
   readonly apiContext: string
   readonly application: {
     readonly id: string
@@ -133,8 +134,9 @@ export class JwtPayload {
   readonly userType: string
   readonly version: string
 
-  /** Client Claims */
-
+  /**
+   * Client Claims
+   */
   readonly byuId: string
   readonly netId: string
   readonly personId: string
@@ -153,8 +155,9 @@ export class JwtPayload {
     this.exp = payload.exp
     this.aud = payload.aud
 
-    /** Issuer Claims */
-
+    /**
+     * Issuer Claims
+     */
     this.apiContext = payload['http://wso2.org/claims/apicontext']
     this.application = {
       id: payload['http://wso2.org/claims/applicationid'],
@@ -170,9 +173,10 @@ export class JwtPayload {
     this.userType = payload['http://wso2.org/claims/usertype']
     this.version = payload['http://wso2.org/claims/version']
 
-    /** Resource Owner or Client Claims */
+    /**
+     * Resource Owner or Client Claims
+     */
     const hasResourceOwner = payload['http://byu.edu/claims/resourceowner_byu_id'] !== undefined
-
     this.byuId = payload['http://byu.edu/claims/resourceowner_byu_id'] ?? payload['http://byu.edu/claims/client_byu_id']
     this.netId = payload['http://byu.edu/claims/resourceowner_net_id'] ?? payload['http://byu.edu/claims/client_net_id']
     this.personId = payload['http://byu.edu/claims/resourceowner_person_id'] ?? payload['http://byu.edu/claims/client_person_id']
