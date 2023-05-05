@@ -36,7 +36,7 @@ automatically.
 
 This library exposes files in
 [both CJS and ESM syntax](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) in order to accommodate
-browser environments and legacy NodeJS applications. CJS support may be dropped in the future but is supported for the
+browser environments and legacy Node.js applications. CJS support may be dropped in the future but is supported for the
 time being.
 
 There are two ways that we know of to support both CJS and ESM syntax:
@@ -67,7 +67,7 @@ The choice to use [Ava](https://avajs.dev) was made because it
 
 1. supports TypeScript and ESM out of the box
 2. parallelizes tests in separate environments making it typically faster
-3. does not mutate nodejs globals like Jest
+3. does not mutate Node.js globals like Jest
 4. follows a similar convention as the node test runner which we may adopt eventually
 
 Running tests requires building the source code first, which should be handled for you by lerna.
@@ -86,7 +86,7 @@ npx lerna run test
 ```
 
 > **Note**
-> There is a bug in NodeJS Worker threads which requires us to use the `--no-worker-threads` flag when running tests.
+> There is a bug in Node.js Worker threads which requires us to use the `--no-worker-threads` flag when running tests.
 > Even with that flag enabled, some tests run into this bug. There isn't a bug report for the issue yet
 > (See [this discussion](https://github.com/avajs/ava/discussions/3191#discussioncomment-5571590)).
 
