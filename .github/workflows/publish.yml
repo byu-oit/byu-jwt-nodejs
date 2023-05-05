@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          # We don't care about git history
+          # Lerna needs the git history to automatically bump package versions
           fetch-depth: 0
 
       - name: Restore Lerna
