@@ -49,8 +49,8 @@
     "ava": "^5.2.0",
     "c8": "^7.13.0",
     "sinon": "^15.0.4",
-    "ts-node": "^10.9.1",
     "tslib": "^2.5.0",
+    "tsx": "^3.12.7",
     "typescript": "^5.0.4"
   },
   "publishConfig": {
@@ -64,7 +64,7 @@
       "ts": "module"
     },
     "nodeArguments": [
-      "--loader=ts-node/esm"
+      "--loader=tsx"
     ]
   }
 }
