@@ -1,5 +1,20 @@
-node_modules
-.idea
-package-lock.json
-coverage
-.nyc_output
+# Build & Dependencies
+node_modules/
+cjs/
+dist/
+esm/
+types/
+*.tsbuildinfo
+*.log
+tmp/
+
+# Testing
+coverage/
+.env
+
+# IDE and Environment
+.idea/
+.DS_Store
+
+# Documentation
+docs/

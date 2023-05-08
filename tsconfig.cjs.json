@@ -1,0 +1,15 @@
+{
+  "extends": "@tsconfig/node-lts/tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "lib": [
+      "DOM",
+      "ES2022"
+    ]
+  },
+  "include": [
+    "packages/*/src"
+  ]
+}

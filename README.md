@@ -1,237 +1,109 @@
-# byu-jwt
+# Packages
 
-This package provides helpful functions for using validating and using BYU's JWTs.
+This repository hosts the following Node.js packages for API development at BYU OIT:
 
-[![codecov](https://codecov.io/gh/byu-oit/byu-jwt-nodejs/branch/main/graph/badge.svg?token=zOI4URNx3D)](https://codecov.io/gh/byu-oit/byu-jwt-nodejs)
+- [@byu-oit/jwt](./packages/jwt/README.md)
+- [@byu-oit/fastify-jwt](./packages/fastify/README.md)
 
-**Requires Node 8 or above**
+The documentation and source code for previous versions of the byu-jwt package are found on
+the [v3 branch](https://github.com/byu-oit/byu-jwt-nodejs/tree/v3) in this repository.
 
-## Table of Contents
+> **Note**
+> **Requires Node.js >= v18 *OR* a fetch polyfill such as [node-fetch](https://www.npmjs.com/package/node-fetch#providing-global-access).**
 
-- [Migrate from v1 to v2](#migrate-from-v1-to-v2)
-- [Migrate from v2 to v3](#migrate-from-v2-to-v3)
-- [API](#api)
-    - [Constructor](#constructor)
-    - [Authenticate](#authenticate)
-    - [Authenticate University API Middleware](#authenticate-university-api-middleware)
-    - [Decode JWT](#decode-jwt)
-    - [Get OpenID Configuration](#get-openid-configuration)
-    - [Get Pem](#get-pem)
-    - [Verify JWT](#verify-jwt)
-    - [Cache Time to Live](#cache-time-to-live)
-    - [Static Constants](#static-constants)
-- [Testing](#testing)
+# Contributing
 
-## Migrate from v1 to v2
+This project uses [Lerna](https://lerna.js.org) with [Nx](https://nx.dev) to build, test, and lint the source code.
+Please consult their documentation when making modifications to the maintenance process of this project.
 
-* Update to Node 8 or above
+There are a few commands that most of the packages share:
 
-## Migrate from v2 to v3
+- **build**: Compile the distribution code
+- **lint**: Lint the source code
+- **test**: Test the source code with [Ava](https://avajs.dev)
 
-* `getPublicKey` has
-  been [removed](https://github.com/byu-oit/byu-jwt-nodejs/commit/fe16edddd1f59a4f6c37acc29d9a20b5878626bd) - If you
-  were using it, look into the new `getPem` function
-* Ensure that the [`openssl`](https://nodejs.org/en/docs/meta/topics/dependencies/#openssl) shipped with your version of
-  Node supports the algorithms you need - We're now using that instead of expecting an `openssl` executable to be found
-  on the system.
-    * This is probably a non-issue because our JWTs have been using RSA-256, which `openssl` has supported for _years_.
+If you notice a problem, please submit an issue or create a PR with the fix!
 
-## API
+## Committing
 
-### Constructor
+Commit messages must adhere to
+the [angular conventional commit standard](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional#type-enum).
+[`commitlint`](https://github.com/conventional-changelog/commitlint) will enforce commit messages to follow this
+standard. Following a commit standard enables our distribution pipeline to publish new versions of each package
+automatically.
 
-`ByuJWT ([ options ])`
+## Building
 
-**Parameters**
+This library exposes files in
+[both CJS and ESM syntax](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) in order to accommodate
+browser environments and legacy Node.js applications. CJS support may be dropped in the future but is supported for the
+time being.
 
-- *options* - An `object` that defines the options for this instance of the byu-jwt library:
+There are two ways that we know of to support both CJS and ESM syntax:
 
-| Option          | Description                                                                                                                                                                                                                                      | Default       |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| basePath        | A `string` that the JWT's API context must begin with. This validates that the JWT came from a server that starts with this path.                                                                                                                | `""`          |
-| cacheTTL        | The `number` of minutes to cache the OpenID configuration for.                                                                                                                                                                                   | `10`          |
-| development     | A `boolean` then when set to `true` will bypass JWT validation. This cannot be set to `true` when the `NODE_ENV` environment variable is set to `"production"`. Also, when set to `true` expect to see a lot of warning message on your console. | `false`       |
-| host            | The host of the issuing oauth provider. If this option is specified, the OpenID Configuration URL will be constructed for you, according to the OpenID Configuration Specification.                                                              | `api.byu.edu` |
-| openIdConfigUrl | The OpenID Configuration URL (AKA Well-known URL). If this is specified, it will override the host option.                                                                                                                                       |               |
+1. Create a localized `package.json` file in each packages' `cjs` directory with the contents `{ type: 'commonjs' }`.
+   This effectively overwrites the package's own `package.json` which is set to `module`.
 
-**Returns** an instance of the [ByuJWT](#constructor)
+   Node Resolution
+   Algorithm: [See ESM_FILE_FORMAT](https://nodejs.org/dist/latest-v18.x/docs/api/esm.html#resolver-algorithm-specification)
 
-### Authenticate
+   ESM & CommonJS Module Tutorial: https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html
 
-Check the headers to see if the requester is authenticated.
+2. Use a tool such as [unbuild](https://github.com/unjs/unbuild) which outputs files with the `.cjs` and `.mjs`
+   extensions.
 
-`ByuJWT.prototype.authenticate ( headers )`
+   Example of Using `unbuild`: https://github.com/unjs/radix3/blob/main/package.json
 
-**Parameters**
+   MDN Docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules
 
-- *headers* - An `object` representing the header names and values. This method is looking specifically for two headers:
+This library uses the first method for two reasons:
 
-    1. `x-jwt-assertion` is a header that contains the JWT for the current client.
-
-    2. `x-jwt-assertion-original` is a header that contains the JWT for the original requester. This value should be set
-       if a client is making an authenticated request on behalf of a different client.
-
-**Returns** a promise that, if authenticated, resolves to an object with some of these properties:
-
-- *current* - The current client's [decoded JWT](#decode-jwt).
-
-- *original* - The original client's [decoded JWT](#decode-jwt). This property may not be defined.
-
-- *originalJWT* - The JWT string provided by the original requester, or if that doesn't exist then of the current
-  client.
-
-- *claims* - A [decoded JWT's](#decode-jwt) primary claim, prioritized in this order:
-
-    1. Original resource owner
-    2. Current resource owner
-    3. Original client
-    4. Current client
-
-### Authenticate University API Middleware
-
-A middleware that will check if the request has authentication and will either add the property `verifiedJWTs` to the
-request or will respond to the request with a `401` or `500` response code.
-
-`ByuJWT.prototype.authenticateUAPIMiddleware`
-
-**Parameters**
-
-- *req* - The request object.
-
-- *res* - The response object.
-
-- *next* - The next function.
-
-**Returns** `undefined`
-
-```js
-const express = require('express')
-const byuJwt = require('byu-jwt')()
-
-const app = express()
-
-app.use(byuJwt.authenticateUAPIMiddleware)
-
-const listener = app.listen(3000, err => {
-  if (err) {
-    console.error(err.stack)
-  } else {
-    console.log('Server listening on port ' + listener.address().port)
-  }
-})
-```
-
-### Decode JWT
-
-Verify and decode a JWT.
-
-`ByuJWT.prototype.decodeJWT ( jwt )`
-
-**Parameters**
-
-- *jwt* - A JWT `string` to validate and decode.
-
-**Returns** a promise that, if valid, resolves to an object with these properties:
-
-- *client* - An object that contains the client claims. It has the following properties: `byuId`, `claimSource`, `netId`
-  , `personId`, `preferredFirstName`, `prefix`, `restofName`, `sortName`, `subscriberNetId`, `suffix`, `surname`
-  , `surnamePosition`
-
-- *claims* - The primary claims object, prefering resource owner first and client second.
-
-- *raw* - The raw claims aquired by validating the JWT.
-
-- *resourceOwner* - The resource owner claims (if a resource owner is defined). It has the following properties: `byuId`
-  , `netId`, `personId`, `preferredFirstName`, `prefix`, `restofName`, `sortName`, `suffix`, `surname`
-  , `surnamePosition`
-
-- *wso2*- Claims specific to WSO2.It has the following properties: `apiContext`, `application.id`, `application.name`
-  , `application.tier`, `clientId`, `endUser`, `endUserTenantId`, `keyType`, `subscriber`, `tier`, `userType`, `version`
-
-### Get OpenId Configuration
-
-Get the OpenID configuration from the well known url.
-
-`ByuJWT.prototype.getOpenIdConfiguration ()`
-
-**Parameters** None
-
-**Returns** a promise that resolves to the OpenID configuration.
-
-### OpenId Configuration URL
-
-Exposes the OpenID Configuration URL, according to the OpenID specification. It is created based on the `host` parameter
-given in the constructor or will be overridden by the `openIdConfigUrl` parameter.
-
-`ByuJWT.prototype.openIdConfigUrl`
-
-### Get Pem
-
-**DEPRECATED**
-
-Avoid use of this function because it may not always return the certificate you're hoping for.
-
-Get the certificate for the OpenID configuration, in .pem format.
-
-`ByuJWT.prototype.getPem ()`
-
-**Parameters** None
-
-**Returns** a promise that resolves to the first certificate pem `string`.
-
-### Verify JWT
-
-Check to see if a JWT is valid.
-
-`ByuJWT.prototype.verifyJWT ( jwt )`
-
-**Parameters**
-
-- *jwt* - A JWT `string` to verify.
-
-**Returns** a promise that resolves to a `boolean`.
-
-### Cache Time to Live
-
-Get or set the cache time to live. The cache only affects how often the OpenID configuration is redownloaded.
-
-```js
-const byuJwt = require('byu-jwt')()
-byuJWT.cacheTTL = 15                    // set cache to 15 minutes
-````
-
-### Static Constants
-
-The following properties are accessible on the ByuJWT object without needing an instantiated object.
-
-- *BYU_JWT_HEADER_CURRENT* - The header name for the current JWT.
-
-- *BYU_JWT_HEADER_ORIGINAL* - The header name for the original JWT.
-
-- *AuthenticationError* - A reference to the AuthenticationError constructor.
-
-- *JsonWebTokenError* - A reference to the JsonWebTokenError constructor.
-
-- *NotBeforeError* - A reference to the NotBeforeError constructor.
-
-- *TokenExpiredError* - A reference to the TokenExpiredError constructor.
-
-**DEPRECATED**
-
-- *WELL_KNOWN_URL* - A reference to the BYU OpenID Configuration URL. It will be removed in the next major version. Use
-ByuJWT.prototype.openIdConfigUrl instead.
-
-```js
-const ByuJWT = require('byu-jwt')
-console.log(ByuJWT.BYU_JWT_HEADER_CURRENT)  // "x-jwt-assertion"
-```
+1. Some tools may never support the `.mjs` extension
+2. `(package.json).type` is more deterministic since the resolution algorithm is built into node and bundlers.
 
 ## Testing
 
-To test this library:
+The choice to use [Ava](https://avajs.dev) was made because it
 
-1. Run `npm install`
+1. supports TypeScript and ESM out of the box
+2. parallelizes tests in separate environments making it typically faster
+3. does not mutate Node.js globals like Jest
+4. follows a similar convention as the node test runner which we may adopt eventually
 
-2. Set the `TOKEN` environment variable
+Running tests requires building the source code first, which should be handled for you by lerna.
 
-3. Run `npm test`
+From the root of the project you can run:
+
+```shell
+npm test
+```
+
+Or you can run the following from anywhere within the project.
+
+```shell
+# use npx if you don't want to install lerna globally
+npx lerna run test
+```
+
+> **Note**
+> There is a bug in Node.js Worker threads which requires us to use the `--no-worker-threads` flag when running tests.
+> Even with that flag enabled, some tests run into this bug. There isn't a bug report for the issue yet
+> (See [this discussion](https://github.com/avajs/ava/discussions/3191#discussioncomment-5571590)).
+
+## Publishing
+
+Merging changes into the `main` branch will automatically update the version of each package, publish the package, and
+publish the changelog according to the [commit messages](#Committing).
+
+Merging changes into the `beta` branch will trigger the same GitHub workflow but the `beta` prefix will be prepended to
+the new versions published.
+
+The `publish` workflow was heavily inspired by the
+article ["Automatic versioning in a Lerna monorepo using Github actions"](https://dev.to/xcanchal/automatic-versioning-in-a-lerna-monorepo-using-github-actions-4hij)
+by [Xavier Canchal](https://dev.to/xcanchal) :clap:.
+
+## Documentation & Linting
+
+Writing SDKs with [TypeScript](https://www.typescriptlang.org/) and [TSDocs](https://tsdoc.org/) provides consumers with
+the code and documentation all from their development environments. To that end, running the linter without documenting
+code with TSDocs style documentation (similar to JSDocs or JavaDocs), will return a non-zero exit code.

@@ -1,0 +1,70 @@
+{
+  "name": "@byu-oit/jwt",
+  "version": "0.0.1-beta.3",
+  "description": "Utilities for verifying and decoding BYU JWTs",
+  "keywords": [],
+  "author": "Spencer Tuft <stuft2@byu.edu>",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "require": "./cjs/index.js",
+      "import": "./esm/index.js"
+    }
+  },
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "types": "./types/index.d.ts",
+  "files": [
+    "cjs",
+    "esm",
+    "types"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/byu-oit/byu-jwt-nodejs.git"
+  },
+  "scripts": {
+    "build": "npx concurrently \"npm:build:*\" -c whiteBright",
+    "build:cjs": "npx rimraf cjs && tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > cjs/package.json",
+    "build:esm": "npx rimraf esm types && tsc",
+    "clean": "npx rimraf esm cjs types",
+    "test": "ava",
+    "test:coverage": "c8 ava"
+  },
+  "bugs": {
+    "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
+  },
+  "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
+  "dependencies": {
+    "@sinclair/typebox": "^0.28.6",
+    "fast-jwt": "^2.2.1",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "@tsconfig/esm": "^1.0.3",
+    "@tsconfig/node-lts": "^18.12.1",
+    "@types/sinon": "^10.0.14",
+    "ava": "^5.2.0",
+    "c8": "^7.13.0",
+    "sinon": "^15.0.4",
+    "tslib": "^2.5.0",
+    "tsx": "^3.12.7",
+    "typescript": "^5.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.spec.ts"
+    ],
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=tsx"
+    ]
+  }
+}
