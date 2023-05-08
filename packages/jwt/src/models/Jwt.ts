@@ -67,7 +67,7 @@ export const RawByuResourceOwnerClaimsSchema = Type.Object({
 
 export type RawByuResourceOwnerClaims = Static<typeof RawByuResourceOwnerClaimsSchema>
 
-export type JwtHeaderType = Static<typeof JwtHeader.Schema>
+export type RawJwtHeader = Static<typeof JwtHeader.Schema>
 
 export class JwtHeader {
   static Schema = Type.Object({
@@ -80,7 +80,7 @@ export class JwtHeader {
   readonly x5t: string
   readonly alg: string
 
-  constructor (jwt: JwtHeaderType) {
+  constructor (jwt: RawJwtHeader) {
     this.kid = jwt.kid
     this.x5t = jwt.x5t
     this.alg = jwt.alg
@@ -97,7 +97,7 @@ export class JwtHeader {
   }
 }
 
-export type JwtPayloadType = Static<typeof JwtPayload.Schema>
+export type RawJwtPayload = Static<typeof JwtPayload.Schema>
 
 export class JwtPayload {
   static Schema = Type.Intersect([
@@ -150,7 +150,7 @@ export class JwtPayload {
   readonly claimSource?: string
   readonly subscriberNetId?: string
 
-  constructor (payload: JwtPayloadType) {
+  constructor (payload: RawJwtPayload) {
     this.iss = payload.iss
     this.exp = payload.exp
     this.aud = payload.aud
