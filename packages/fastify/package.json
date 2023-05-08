@@ -39,7 +39,7 @@
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
     "@byu-oit/jwt": "^0.0.1",
-    "@types/node": "^18.16.2",
+    "@types/node": "^20.1.0",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0"
   },
