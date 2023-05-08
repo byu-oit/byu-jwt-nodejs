@@ -7,19 +7,23 @@
 ```javascript
 import {ByuJwt} from '@byu-oit/jwt'
 
-const byuJwt = new ByuJwt({ issuer: 'https://api.byu.edu' })
+const byuJwt = new ByuJwt({issuer: 'https://api.byu.edu'})
 
 const jwt = byuJwt.verify('[your jwt]')
 
 /** Access the jwt payload information */
-const { byuId } = jwt.payload
+const {byuId} = jwt.payload
 
 /** Access the jwt header information */
-const { alg } = jwt.header
+const {alg} = jwt.header
 ```
 
 > **Note**
-> Please refer to the API documentation if you need to see what information is made available in the jwt payload or header.
+> Please refer
+> to [the API documentation](https://byu-oit.github.io/byu-jwt-nodejs) if you need
+> to see what information is made available in
+> the [jwt payload](https://byu-oit.github.io/byu-jwt-nodejs/classes/BYU_JWT.JwtPayload.html)
+> or [header](https://byu-oit.github.io/byu-jwt-nodejs/classes/BYU_JWT.JwtHeader.html).
 
 ## Options
 
