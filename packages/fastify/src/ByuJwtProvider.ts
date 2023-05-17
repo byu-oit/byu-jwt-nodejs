@@ -31,8 +31,9 @@ const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (f
    * under the specified prefix.
    */
   fastify.addHook('onRoute', (route) => {
+    const foundPrefix = options.prefix != null
     const matchesRoute = options.prefix != null && route.path.startsWith(options.prefix)
-    if (!matchesRoute) {
+    if (foundPrefix && !matchesRoute) {
       /** Don't add authentication to routes that don't match the specified prefix */
       return
     }
