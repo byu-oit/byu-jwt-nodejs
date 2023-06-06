@@ -24,6 +24,11 @@ jobs:
     name: ${{ matrix.registry.name }} package
     runs-on: ubuntu-latest
 
+    # Allow GitHub Action to read repo and install/publish packages from GitHub Package Registry
+    permissions:
+      contents: read
+      packages: write
+
     # Publish to both NPM and GitHub Package Registry
     strategy:
       matrix:
