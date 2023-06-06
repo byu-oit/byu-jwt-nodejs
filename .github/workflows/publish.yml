@@ -104,6 +104,12 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     needs: [ packages ]
+
+    # Allow GitHub Action to read repo and install/publish packages from GitHub Package Registry
+    permissions:
+      contents: write
+      packages: read
+
     steps:
       - uses: actions/checkout@v3
         with:
