@@ -1,6 +1,6 @@
 {
   "name": "@byu-oit/fastify-jwt",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A Fastify plugin for verifying callers JWTs with the BYU JWT package",
   "keywords": [],
   "author": "Spencer Tuft <stuft2@byu.edu>",

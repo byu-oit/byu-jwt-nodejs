@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.1...@byu-oit/fastify-jwt@0.1.2) (2023-06-06)
+
+
+### Bug Fixes
+
+* fastify jwt provider to match prefix on start of route path instead of prefix of route ([#109](https://github.com/byu-oit/byu-jwt-nodejs/issues/109)) ([892dc4f](https://github.com/byu-oit/byu-jwt-nodejs/commit/892dc4f2d7deb065872d7e4c1e0c83f87295fe4a))
+* if api context not basePath, then throw error ([#122](https://github.com/byu-oit/byu-jwt-nodejs/issues/122)) ([17dee9b](https://github.com/byu-oit/byu-jwt-nodejs/commit/17dee9bcae60437d55ae14ffc147f253e48a8a87))
+
+
+
+
+
 ## [0.1.1](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.0...@byu-oit/fastify-jwt@0.1.1) (2023-05-08)
 
 **Note:** Version bump only for package @byu-oit/fastify-jwt
