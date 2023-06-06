@@ -35,7 +35,7 @@ export class ByuJwtAuthenticator extends ByuJwt {
     /** Extra validation step for production */
     if (!this.development && this.basePath != null) {
       const context = current.apiContext
-      if (context.startsWith(this.basePath)) {
+      if (!context.startsWith(this.basePath)) {
         throw new ByuJwtError(BYU_JWT_ERROR_CODES.invalidApiContext, 'Invalid API context in JWT')
       }
       /** Check that the JWT is meant for the audience */
