@@ -32,8 +32,8 @@ export class ByuJwtAuthenticator extends ByuJwt {
       throw new ByuJwtError(BYU_JWT_ERROR_CODES.missingExpectedJwt, 'Missing expected JWT')
     }
 
-    /** Extra validation step for production */
-    if (!this.development && this.basePath != null) {
+    /** Extra validation step if basePath is provided */
+    if (this.basePath != null) {
       const context = current.apiContext
       if (!context.startsWith(this.basePath)) {
         throw new ByuJwtError(BYU_JWT_ERROR_CODES.invalidApiContext, 'Invalid API context in JWT')
