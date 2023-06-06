@@ -19,7 +19,7 @@ export interface ByuJwtOptions {
 }
 
 export class ByuJwt {
-  protected basePath: string
+  protected basePath?: string
 
   protected cacheDuration: number
 
@@ -30,7 +30,7 @@ export class ByuJwt {
   public readonly openIdConfigUrl: string
 
   constructor (options?: ByuJwtOptions) {
-    this.basePath = options?.basePath ?? ''
+    this.basePath = options?.basePath
     this.cacheDuration = options?.cacheDuration ?? 60 * 60 // 1 hour default
 
     if (options?.openIdConfigUrl != null) {
