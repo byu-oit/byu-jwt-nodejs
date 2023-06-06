@@ -33,15 +33,16 @@ export class ByuJwtAuthenticator extends ByuJwt {
     }
 
     /** Extra validation step if basePath is provided */
-    if (this.basePath != null) {
+    const basePath = this.basePath
+    if (basePath != null) {
       const context = current.apiContext
-      if (!context.startsWith(this.basePath)) {
+      if (!context.startsWith(basePath)) {
         throw new ByuJwtError(BYU_JWT_ERROR_CODES.invalidApiContext, 'Invalid API context in JWT')
       }
       /** Check that the JWT is meant for the audience */
       if (current.aud != null) {
         const audiences = typeof current.aud === 'string' ? [current.aud] : current.aud
-        const hasAValidAudience = !audiences.some(audience => audience.startsWith(this.basePath))
+        const hasAValidAudience = !audiences.some(audience => audience.startsWith(basePath))
         if (hasAValidAudience) {
           throw new ByuJwtError(BYU_JWT_ERROR_CODES.invalidAudience, 'Invalid aud in JWT')
         }
