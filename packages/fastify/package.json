@@ -1,6 +1,6 @@
 {
   "name": "@byu-oit/fastify-jwt",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Fastify plugin for verifying callers JWTs with the BYU JWT package",
   "keywords": [],
   "author": "Spencer Tuft <stuft2@byu.edu>",
@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
-    "@byu-oit/jwt": "^0.0.2",
+    "@byu-oit/jwt": "^0.0.3",
     "@types/node": "^18.16.2",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0"

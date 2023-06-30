@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.3](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.2...@byu-oit/jwt@0.0.3) (2023-06-30)
+
+
+### Bug Fixes
+
+* if api context not basePath, then throw error ([#123](https://github.com/byu-oit/byu-jwt-nodejs/issues/123)) ([9805548](https://github.com/byu-oit/byu-jwt-nodejs/commit/98055480611f005d17c11dfb28b0c7268eab5a4b))
+
+
+
+
+
 ## [0.0.2](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.1...@byu-oit/jwt@0.0.2) (2023-05-08)
 
 **Note:** Version bump only for package @byu-oit/jwt
