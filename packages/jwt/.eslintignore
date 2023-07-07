@@ -1,0 +1,8 @@
+dist/
+esm/
+cjs/
+types/
+docs/
+/commitlint.config.*
+scripts/
+

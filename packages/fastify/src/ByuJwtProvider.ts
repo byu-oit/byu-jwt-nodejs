@@ -41,6 +41,7 @@ const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (f
     if (route.preValidation == null) {
       route.preValidation = [ByuJwtAuthenticationHandler]
     } else if (Array.isArray(route.preValidation)) {
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       route.preValidation.push(ByuJwtAuthenticationHandler)
     } else {
       route.preValidation = [route.preValidation, ByuJwtAuthenticationHandler]

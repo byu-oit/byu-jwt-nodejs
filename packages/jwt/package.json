@@ -26,10 +26,12 @@
     "url": "git+https://github.com/byu-oit/byu-jwt-nodejs.git"
   },
   "scripts": {
-    "build": "npx concurrently \"npm:build:*\" -c whiteBright",
-    "build:cjs": "npx rimraf cjs && tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > cjs/package.json",
-    "build:esm": "npx rimraf esm types && tsc",
-    "clean": "npx rimraf esm cjs types",
+    "build": "concurrently \"npm:build:*\" -c whiteBright",
+    "build:cjs": "rimraf cjs && tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > cjs/package.json",
+    "build:esm": "rimraf esm types && tsc",
+    "clean": "rimraf esm cjs types",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
     "test": "ava",
     "test:coverage": "c8 ava"
   },
@@ -38,7 +40,7 @@
   },
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
-    "@sinclair/typebox": "^0.28.6",
+    "@sinclair/typebox": "^0.29.4",
     "fast-jwt": "^2.2.1",
     "node-cache": "^5.1.2"
   },
@@ -46,8 +48,15 @@
     "@tsconfig/esm": "^1.0.3",
     "@tsconfig/node-lts": "^18.12.1",
     "@types/sinon": "^10.0.14",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
     "ava": "^5.2.0",
     "c8": "^7.13.0",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.44.0",
+    "eslint-config-standard-with-typescript": "^36.0.0",
+    "eslint-plugin-tsdoc": "^0.2.17",
+    "rimraf": "^5.0.1",
     "sinon": "^15.0.4",
     "tslib": "^2.5.0",
     "tsx": "^3.12.7",
