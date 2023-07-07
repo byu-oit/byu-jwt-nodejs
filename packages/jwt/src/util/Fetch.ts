@@ -1,5 +1,8 @@
-import { toSeconds } from './Date.js'
-
+/**
+ * Parses the headers to find the max-age directive in the cache-control header.
+ * @param headers - The request headers
+ * @returns The max age in seconds.
+ */
 export function getMaxAge (headers: Headers): number | undefined {
   const cacheControl = headers.get('cache-control')
   if (cacheControl == null) {
@@ -10,6 +13,5 @@ export function getMaxAge (headers: Headers): number | undefined {
   if (match?.groups?.maxAge == null) {
     return
   }
-  const cacheDuration = +match.groups.maxAge
-  return toSeconds(cacheDuration)
+  return +match.groups.maxAge
 }
