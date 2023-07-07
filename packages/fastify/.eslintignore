@@ -1,6 +1,6 @@
-cjs/
 dist/
 esm/
+cjs/
 types/
 docs/
 /commitlint.config.*

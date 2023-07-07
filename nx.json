@@ -6,6 +6,7 @@
         "cacheableOperations": [
           "build",
           "lint",
+          "lint:fix",
           "test",
           "test:coverage"
         ]
@@ -19,6 +20,11 @@
       ]
     },
     "lint": {
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "lint:fix": {
       "dependsOn": [
         "build"
       ]
