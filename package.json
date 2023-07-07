@@ -6,13 +6,13 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "npx lerna run build",
-    "clean": "npx lerna run clean && nx reset",
+    "build": "lerna run build",
+    "clean": "lerna run clean && nx reset",
     "docs": "typedoc",
-    "lint": "npm run build && npx eslint .",
-    "lint:fix": "npm run build && npx eslint . --fix",
-    "test": "npx lerna run test",
-    "test:coverage": "npx lerna run test:coverage"
+    "lint": "npm run build && eslint .",
+    "lint:fix": "npm run build && eslint . --fix",
+    "test": "lerna run test",
+    "test:coverage": "lerna run test:coverage"
   },
   "workspaces": [
     "packages/*"
@@ -28,8 +28,8 @@
     "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-plugin-tsdoc": "^0.2.17",
     "husky": "^8.0.2",
-    "lerna": "^6.6.1",
-    "nx": "^15.0.13",
+    "lerna": "^7.1.1",
+    "nx": "^16.5.0",
     "typedoc": "^0.24.6"
   },
   "publishConfig": {

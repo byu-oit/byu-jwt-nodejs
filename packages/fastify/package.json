@@ -26,10 +26,10 @@
     "url": "git+https://github.com/byu-oit/byu-jwt-nodejs.git"
   },
   "scripts": {
-    "build": "npx concurrently \"npm:build:*\" -c whiteBright",
-    "build:cjs": "npx rimraf cjs && tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > cjs/package.json",
-    "build:esm": "npx rimraf esm types && tsc",
-    "clean": "npx rimraf esm cjs types",
+    "build": "concurrently \"npm:build:*\" -c whiteBright",
+    "build:cjs": "rimraf cjs && tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > cjs/package.json",
+    "build:esm": "rimraf esm types && tsc",
+    "clean": "rimraf esm cjs types",
     "test": "ava",
     "test:coverage": "c8 ava"
   },
@@ -48,7 +48,9 @@
     "@tsconfig/node-lts": "^18.12.1",
     "ava": "^5.2.0",
     "c8": "^7.13.0",
+    "concurrently": "^8.2.0",
     "fastify": "^4.16.3",
+    "rimraf": "^5.0.1",
     "tslib": "^2.5.0",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4"

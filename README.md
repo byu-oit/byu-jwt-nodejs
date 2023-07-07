@@ -78,13 +78,6 @@ From the root of the project you can run:
 npm test
 ```
 
-Or you can run the following from anywhere within the project.
-
-```shell
-# use npx if you don't want to install lerna globally
-npx lerna run test
-```
-
 > **Note**
 > There is a bug in Node.js Worker threads which requires us to use the `--no-worker-threads` flag when running tests.
 > Even with that flag enabled, some tests run into this bug. There isn't a bug report for the issue yet
