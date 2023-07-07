@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.5](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.4...@byu-oit/jwt@0.0.5) (2023-07-07)
+
+
+### Bug Fixes
+
+* remove conversion from ms to seconds ([#141](https://github.com/byu-oit/byu-jwt-nodejs/issues/141)) ([22f689a](https://github.com/byu-oit/byu-jwt-nodejs/commit/22f689a0f0d72509a2299020b381c9660addd0d7))
+
+
+
+
+
 ## [0.0.4](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.3...@byu-oit/jwt@0.0.4) (2023-06-30)
 
 **Note:** Version bump only for package @byu-oit/jwt
