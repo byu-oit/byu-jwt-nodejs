@@ -21,7 +21,7 @@
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-angular": "^17.2.0",
     "@tsconfig/esm": "^1.0.2",
-    "conventional-changelog-cli": "^2.2.2",
+    "conventional-changelog-cli": "^3.0.0",
     "husky": "^8.0.2",
     "lerna": "^7.1.1",
     "nx": "^16.5.0",
