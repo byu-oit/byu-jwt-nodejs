@@ -2,6 +2,7 @@
   "extends": "@tsconfig/node-lts/tsconfig.json",
   "compilerOptions": {
     "skipLibCheck": true,
+    "module": "CommonJS",
     "esModuleInterop": true,
     "importHelpers": true,
     "lib": [
