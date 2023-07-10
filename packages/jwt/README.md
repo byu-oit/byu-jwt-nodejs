@@ -5,17 +5,17 @@
 ## Usage
 
 ```javascript
-import {ByuJwt} from '@byu-oit/jwt'
+import { ByuJwt } from '@byu-oit/jwt'
 
-const byuJwt = new ByuJwt({issuer: 'https://api.byu.edu'})
+const byuJwt = new ByuJwt({ issuer: 'https://api.byu.edu' })
 
 const jwt = byuJwt.verify('[your jwt]')
 
 /** Access the jwt payload information */
-const {byuId} = jwt.payload
+const { byuId } = jwt.payload
 
 /** Access the jwt header information */
-const {alg} = jwt.header
+const { alg } = jwt.header
 ```
 
 > **Note**

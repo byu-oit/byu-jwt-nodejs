@@ -6,11 +6,11 @@
 
 ```javascript
 import Fastify from 'fastify'
-import {ByuLogger} from '@byu-oit/logger'
-import {ByuJwtProvider} from '@byu-oit/fastify-jwt'
+import { ByuLogger } from '@byu-oit/logger'
+import { ByuJwtProvider } from '@byu-oit/fastify-jwt'
 
 const logger = ByuLogger()
-const fastify = Fastify({logger})
+const fastify = Fastify({ logger })
 
 fastify.register(ByuJwtProvider, {
   /** Only authenticate routes matching this prefix */

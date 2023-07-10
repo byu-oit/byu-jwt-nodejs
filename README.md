@@ -66,9 +66,9 @@ This library uses the first method for two reasons:
 The choice to use [Ava](https://avajs.dev) was made because it
 
 1. supports TypeScript and ESM out of the box
-2. parallelizes tests in separate environments making it typically faster
+2. parallelizes tests in separate environments making ava typically faster
 3. does not mutate Node.js globals like Jest
-4. follows a similar convention as the node test runner which we may adopt eventually
+4. follows a similar convention as the node test runner which we may eventually adopt
 
 Running tests requires building the source code first, which should be handled for you by lerna.
 
