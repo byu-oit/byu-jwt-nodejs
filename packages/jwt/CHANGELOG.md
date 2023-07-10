@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.6](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.5...@byu-oit/jwt@0.0.6) (2023-07-10)
+
+
+### Bug Fixes
+
+* **cjs:** compile commonjs in **/cjs and publish([#147](https://github.com/byu-oit/byu-jwt-nodejs/issues/147)) ([a2bd002](https://github.com/byu-oit/byu-jwt-nodejs/commit/a2bd002782b42a1ac7aac7e65b5457dad2c61775))
+
+
+
+
+
 ## [0.0.5](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.4...@byu-oit/jwt@0.0.5) (2023-07-07)
 
 

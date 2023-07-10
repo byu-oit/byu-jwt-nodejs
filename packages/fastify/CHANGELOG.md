@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.6](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.5...@byu-oit/fastify-jwt@0.1.6) (2023-07-10)
+
+
+### Bug Fixes
+
+* **cjs:** compile commonjs in **/cjs and publish([#147](https://github.com/byu-oit/byu-jwt-nodejs/issues/147)) ([a2bd002](https://github.com/byu-oit/byu-jwt-nodejs/commit/a2bd002782b42a1ac7aac7e65b5457dad2c61775))
+
+
+
+
+
 ## [0.1.5](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.4...@byu-oit/fastify-jwt@0.1.5) (2023-07-07)
 
 **Note:** Version bump only for package @byu-oit/fastify-jwt
