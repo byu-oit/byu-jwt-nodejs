@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.7-beta.0](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.6...@byu-oit/fastify-jwt@0.1.7-beta.0) (2023-09-11)
+
+**Note:** Version bump only for package @byu-oit/fastify-jwt
+
+
+
+
+
 ## [0.1.6](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.5...@byu-oit/fastify-jwt@0.1.6) (2023-07-10)
 
 
