@@ -1,103 +1,144 @@
-import NodeCache from 'node-cache'
 import {
-  OpenIdConfiguration,
-  Certificates,
-  type PemCertificate,
-  Jwt
-} from './models/index.js'
-import { getMaxAge } from './util/Fetch.js'
+  JwtPayload,
+  RawByuClientClaimsSchema,
+  RawByuResourceOwnerClaimsSchema,
+  RawIssuerClaimsSchema
+} from './models/Jwt.js'
+import {
+  createJwt,
+  type CreateJwtOptions,
+  type JwtPayloadTransformer
+} from '@byu-oit-sdk/jwt'
+import { type Static, Type } from '@sinclair/typebox'
 
-export const OPEN_ID_CONFIG_KEY = 'open-id-config'
-export const BYU_CERT_KEY = 'byu-cert'
+export const JwtPayloadSchema = Type.Intersect([
+  Type.Object({
+    iss: Type.Optional(Type.String()),
+    exp: Type.Optional(Type.Number()),
+    aud: Type.Optional(Type.Union([Type.String(), Type.Array(Type.String())]))
+  }),
+  RawIssuerClaimsSchema,
+  RawByuClientClaimsSchema,
+  Type.Partial(RawByuResourceOwnerClaimsSchema)
+])
 
-export interface ByuJwtOptions {
-  basePath?: string
-  cacheDuration?: number
-  development?: boolean
-  issuer?: string
-  openIdConfigUrl?: string
+export type JwtPayloadData = Static<typeof JwtPayloadSchema>
+export interface TransformedJwtPayload extends Record<string, unknown> {
+  readonly iss?: string
+  readonly exp?: number
+  readonly aud?: string[] | string
+
+  /**
+     * Issuer Claims
+     */
+  readonly apiContext: string
+  readonly application: {
+    readonly id: string
+    readonly name: string
+    readonly tier: string
+  }
+
+  readonly clientId: string
+  readonly endUser: string
+  readonly endUserTenantId: string
+  readonly keyType: string
+  readonly subscriber: string
+  readonly tier: string
+  readonly userType: string
+  readonly version: string
+
+  /**
+     * Client Claims
+     */
+  readonly byuId: string
+  readonly netId: string
+  readonly personId: string
+  readonly preferredFirstName: string
+  readonly prefix: string
+  readonly restOfName: string
+  readonly sortName: string
+  readonly suffix: string
+  readonly surname: string
+  readonly surnamePosition: string
+  readonly claimSource?: string
+  readonly subscriberNetId?: string
 }
 
-export class ByuJwt {
-  protected basePath?: string
+export const transformer: JwtPayloadTransformer<typeof JwtPayloadSchema, TransformedJwtPayload> = (payload) => {
+  const iss = payload.iss
+  const exp = payload.exp
+  const aud = payload.aud
 
-  protected cacheDuration: number
-
-  public readonly cache: NodeCache
-
-  protected development: boolean
-
-  public readonly openIdConfigUrl: string
-
-  constructor (options?: ByuJwtOptions) {
-    this.basePath = options?.basePath
-    this.cacheDuration = options?.cacheDuration ?? 60 * 60 // 1 hour default
-
-    if (options?.openIdConfigUrl != null) {
-      this.openIdConfigUrl = options.openIdConfigUrl
-    } else if (options?.issuer != null) {
-      const issuer = /^https?:\/\//.test(options.issuer) ? options.issuer : `https://${options.issuer}`
-      this.openIdConfigUrl = `${issuer}/.well-known/openid-configuration`
-    } else {
-      throw Error('Missing OpenID configuration URL')
-    }
-
-    this.development = options?.development ?? false
-    if (this.development && process.env.NODE_ENV === 'production') {
-      throw Error('@byu-oit/jwt is set to development mode but environment variable NODE_ENV is set to production')
-    }
-
-    this.cache = new NodeCache()
+  /**
+     * Issuer Claims
+     */
+  const apiContext = payload['http://wso2.org/claims/apicontext']
+  const application = {
+    id: payload['http://wso2.org/claims/applicationid'],
+    name: payload['http://wso2.org/claims/applicationname'],
+    tier: payload['http://wso2.org/claims/applicationtier']
   }
+  const clientId = payload['http://wso2.org/claims/client_id']
+  const endUser = payload['http://wso2.org/claims/enduser']
+  const endUserTenantId = payload['http://wso2.org/claims/enduserTenantId']
+  const keyType = payload['http://wso2.org/claims/keytype']
+  const subscriber = payload['http://wso2.org/claims/subscriber']
+  const tier = payload['http://wso2.org/claims/tier']
+  const userType = payload['http://wso2.org/claims/usertype']
+  const version = payload['http://wso2.org/claims/version']
 
-  async getOpenIdConfiguration (): Promise<OpenIdConfiguration> {
-    /** Check cache fo open id config */
-    let config = this.cache.get<OpenIdConfiguration>(OPEN_ID_CONFIG_KEY)
-    if (config == null) {
-      /** Refresh our open id configuration cache */
-      const response = await fetch(this.openIdConfigUrl)
-      /** Check for max-age in Cache-Control header or set a default */
-      const cacheDuration = getMaxAge(response.headers) ?? this.cacheDuration
-      /** Validate the configuration */
-      config = OpenIdConfiguration.from(await response.json())
-      /** Cache OpenId configuration */
-      this.cache.set(OPEN_ID_CONFIG_KEY, config, cacheDuration)
-    }
-    return config
+  /**
+     * Resource Owner or Client Claims
+     */
+  const hasResourceOwner = payload['http://byu.edu/claims/resourceowner_byu_id'] !== undefined
+  const byuId = payload['http://byu.edu/claims/resourceowner_byu_id'] ?? payload['http://byu.edu/claims/client_byu_id']
+  const netId = payload['http://byu.edu/claims/resourceowner_net_id'] ?? payload['http://byu.edu/claims/client_net_id']
+  const personId = payload['http://byu.edu/claims/resourceowner_person_id'] ?? payload['http://byu.edu/claims/client_person_id']
+  const preferredFirstName = payload['http://byu.edu/claims/resourceowner_preferred_first_name'] ?? payload['http://byu.edu/claims/client_preferred_first_name']
+  const prefix = payload['http://byu.edu/claims/resourceowner_prefix'] ?? payload['http://byu.edu/claims/client_name_prefix']
+  const restOfName = payload['http://byu.edu/claims/resourceowner_rest_of_name'] ?? payload['http://byu.edu/claims/client_rest_of_name']
+  const sortName = payload['http://byu.edu/claims/resourceowner_sort_name'] ?? payload['http://byu.edu/claims/client_sort_name']
+  const suffix = payload['http://byu.edu/claims/resourceowner_suffix'] ?? payload['http://byu.edu/claims/client_name_suffix']
+  const surname = payload['http://byu.edu/claims/resourceowner_surname'] ?? payload['http://byu.edu/claims/client_surname']
+  const surnamePosition = payload['http://byu.edu/claims/resourceowner_surname_position'] ?? payload['http://byu.edu/claims/client_surname_position']
+  const claimSource = hasResourceOwner ? payload['http://byu.edu/claims/client_claim_source'] : undefined
+  const subscriberNetId = hasResourceOwner ? payload['http://byu.edu/claims/client_subscriber_net_id'] : undefined
+
+  return {
+    iss,
+    exp,
+    aud,
+    apiContext,
+    application,
+    clientId,
+    endUser,
+    endUserTenantId,
+    keyType,
+    subscriber,
+    tier,
+    userType,
+    version,
+    byuId,
+    netId,
+    personId,
+    preferredFirstName,
+    prefix,
+    restOfName,
+    sortName,
+    suffix,
+    surname,
+    surnamePosition,
+    claimSource,
+    subscriberNetId
   }
+}
 
-  async getPem (): Promise<PemCertificate[]> {
-    let certs = this.cache.get<Certificates>(BYU_CERT_KEY)
-    if (certs == null) {
-      /** Refresh our cert cache */
-      const config = await this.getOpenIdConfiguration()
-      const response = await fetch(config.jwksUri)
-      /** Check for max-age in Cache-Control header or set a default */
-      const cacheDuration = getMaxAge(response.headers) ?? this.cacheDuration
-      /** Validate the certification endpoint response */
-      certs = Certificates.from(await response.json())
-      /** Cache certs */
-      this.cache.set(BYU_CERT_KEY, certs, cacheDuration)
+export type CreateByuJwtOptions = Omit<CreateJwtOptions<typeof JwtPayloadSchema, TransformedJwtPayload>, 'schema' | 'transformer'>
+
+export class ByuJwt extends createJwt({ schema: JwtPayload.Schema, transformer }) {
+  static create (options?: CreateByuJwtOptions): typeof ByuJwt {
+    return class CustomByuJwt extends createJwt({ ...options, schema: JwtPayload.Schema, transformer }) {
+      static create = ByuJwt.create
     }
-    /** Return pem-formatted certificates */
-    return certs.pemCertificates
-  }
-
-  async verify (jwt: string): Promise<Jwt> {
-    const decoded = Jwt.decode(jwt)
-    if (this.development) {
-      /** We can skip verification */
-      return decoded
-    }
-
-    /** Check for valid key in JWT header */
-    const validKeys = await this.getPem()
-    const foundKey = validKeys.find(key => key.x5t === decoded.header.x5t)
-    if (foundKey == null) {
-      throw new Error('x5t in JWT did not correspond to any known key')
-    }
-
-    /** Verify JWT integrity */
-    return Jwt.verify(jwt, foundKey.x5c)
   }
 }

@@ -40,8 +40,8 @@
   },
   "homepage": "https://github.com/byu-oit/byu-jwt-nodejs#readme",
   "dependencies": {
-    "@sinclair/typebox": "^0.29.4",
-    "fast-jwt": "^2.2.1",
+    "@byu-oit-sdk/jwt": "^0.1.0-beta.5",
+    "@sinclair/typebox": "^0.31.2",
     "node-cache": "^5.1.2"
   },
   "devDependencies": {
