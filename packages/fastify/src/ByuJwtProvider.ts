@@ -1,7 +1,10 @@
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
 import fp from 'fastify-plugin'
-import type { ByuJwtOptions, JwtPayload } from '@byu-oit/jwt'
-import { ByuJwtAuthenticator } from './ByuJwtAuthenticator.js'
+import type { JwtPayload } from '@byu-oit/jwt'
+import {
+  ByuJwtAuthenticator,
+  type ByuJwtAuthenticatorOptions
+} from './ByuJwtAuthenticator.js'
 
 /** Enhance the fastify request with the verified caller information */
 declare module 'fastify' {
@@ -10,13 +13,13 @@ declare module 'fastify' {
   }
 }
 
-export interface ByuJwtProviderOptions extends ByuJwtOptions {
+export interface ByuJwtProviderOptions extends ByuJwtAuthenticatorOptions {
   prefix?: string
 }
 
 const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (fastify, options) => {
-  const authenticator = new ByuJwtAuthenticator(options)
-
+  const { prefix, ...opts } = options
+  const authenticator = new ByuJwtAuthenticator(opts)
   async function ByuJwtAuthenticationHandler (request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       request.caller = await authenticator.authenticate(request.headers)
@@ -31,7 +34,7 @@ const ByuJwtProviderPlugin: FastifyPluginAsync<ByuJwtProviderOptions> = async (f
    * under the specified prefix.
    */
   fastify.addHook('onRoute', (route) => {
-    if (options.prefix != null && !route.path.startsWith(options.prefix)) {
+    if (prefix != null && !route.path.startsWith(prefix)) {
       /** Don't add authentication to routes that don't match the specified prefix */
       return
     }

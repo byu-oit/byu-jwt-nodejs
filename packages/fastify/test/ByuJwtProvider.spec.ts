@@ -1,7 +1,8 @@
 import test from 'ava'
 import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify'
 import ByuJwtProvider, { type ByuJwtError } from '../src/index.js'
-import { expiredJwt } from './assets/jwt.js'
+import { expiredJwt, decodedJwt } from './assets/jwt.js'
+import { apiContextValidationFunction } from '../src/index.js'
 
 const issuer = 'https://example.com'
 const development = true
@@ -12,26 +13,41 @@ const errorHandler = (error: ByuJwtError, request: FastifyRequest, reply: Fastif
 
 test('authenticated user', async t => {
   const fastify = Fastify()
-  await fastify.register(ByuJwtProvider, { issuer, development })
+  await fastify.register(ByuJwtProvider, { byuJwtOptions: { issuer }, development })
   fastify.get('/', (request) => request.caller)
   const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
   t.is(result.netId, 'stuft2')
 })
 
+test('cannot fetch key', async t => {
+  const fastify = Fastify()
+  await fastify.register(ByuJwtProvider, { byuJwtOptions: { issuer }, basePath: '/test' })
+  fastify.get('/', (request) => request.caller)
+  const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
+  t.is(result.message, 'Cannot fetch key.')
+})
+
 test('missing expected JWT', async t => {
   const fastify = Fastify()
   fastify.setErrorHandler(errorHandler)
-  await fastify.register(ByuJwtProvider, { issuer, development })
+  await fastify.register(ByuJwtProvider, { byuJwtOptions: { issuer }, development })
   fastify.get('/', () => true)
   const result = await fastify.inject('/').then(res => res.json<ByuJwtError>())
   t.is(result.message, 'Missing expected JWT')
 })
+
 test('invalid API context in JWT', async t => {
-  const fastify = Fastify()
-  await fastify.register(ByuJwtProvider, { issuer, development, basePath: '/test' }) // fails because development:false forces jwt to be valid
-  fastify.get('/', (request) => request.caller)
-  const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json<ByuJwtError>())
-  t.is(result.message, 'Invalid API context in JWT')
+  const validate = apiContextValidationFunction('/test')
+  t.throws(() => {
+    validate(decodedJwt)
+  }, { instanceOf: Error, message: 'Invalid API context in JWT' })
 })
-test.todo('invalid audience in JWT') // Can't easily get aud from auth code token
+
+test('invalid audience in JWT', async t => {
+  const validate = apiContextValidationFunction('/echo')
+  t.throws(() => {
+    validate(decodedJwt)
+  }, { instanceOf: Error, message: 'Invalid aud in JWT' })
+})
+
 test.todo('will return original instead of current')
