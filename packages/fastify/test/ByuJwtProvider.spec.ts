@@ -13,7 +13,7 @@ const errorHandler = (error: ByuJwtError, request: FastifyRequest, reply: Fastif
 
 test('authenticated user', async t => {
   const fastify = Fastify()
-  await fastify.register(ByuJwtProvider, { byuJwtOptions: { issuer }, development })
+  await fastify.register(ByuJwtProvider, { issuer, development })
   fastify.get('/', (request) => request.caller)
   const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
   t.is(result.netId, 'stuft2')
@@ -21,7 +21,7 @@ test('authenticated user', async t => {
 
 test('cannot fetch key', async t => {
   const fastify = Fastify()
-  await fastify.register(ByuJwtProvider, { byuJwtOptions: { issuer }, basePath: '/test' })
+  await fastify.register(ByuJwtProvider, { issuer, basePath: '/test' })
   fastify.get('/', (request) => request.caller)
   const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
   t.is(result.message, 'Cannot fetch key.')
@@ -30,7 +30,7 @@ test('cannot fetch key', async t => {
 test('missing expected JWT', async t => {
   const fastify = Fastify()
   fastify.setErrorHandler(errorHandler)
-  await fastify.register(ByuJwtProvider, { byuJwtOptions: { issuer }, development })
+  await fastify.register(ByuJwtProvider, { issuer, development })
   fastify.get('/', () => true)
   const result = await fastify.inject('/').then(res => res.json<ByuJwtError>())
   t.is(result.message, 'Missing expected JWT')
