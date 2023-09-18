@@ -3,8 +3,7 @@ import { TokenError } from 'fast-jwt'
 import { type IncomingHttpHeaders } from 'http'
 import { BYU_JWT_ERROR_CODES, ByuJwtError } from './ByuJwtError.js'
 
-export interface ByuJwtAuthenticatorOptions {
-  byuJwtOptions?: CreateByuJwtOptions
+export interface ByuJwtAuthenticatorOptions extends CreateByuJwtOptions {
   development?: boolean
   basePath?: string
 }
@@ -16,9 +15,8 @@ export class ByuJwtAuthenticator {
   private readonly ByuJwt: typeof ByuJwt
   private readonly development: boolean
 
-  constructor ({ development, basePath, byuJwtOptions = {} }: ByuJwtAuthenticatorOptions = {}) {
+  constructor ({ development, basePath, ...byuJwtOptions }: ByuJwtAuthenticatorOptions = {}) {
     this.development = development ?? false
-
     /** Extra validation step if basePath is provided */
     if (basePath != null) {
       if (byuJwtOptions.additionalValidations == null) {
