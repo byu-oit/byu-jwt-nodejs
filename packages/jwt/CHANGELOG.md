@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.7-beta.2](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.7-beta.1...@byu-oit/jwt@0.0.7-beta.2) (2023-09-25)
+
+
+### Bug Fixes
+
+* update dependencies ([#157](https://github.com/byu-oit/byu-jwt-nodejs/issues/157)) ([1a3229c](https://github.com/byu-oit/byu-jwt-nodejs/commit/1a3229c1e8e6baaee03ee29946a7a1d29f5009c6))
+
+
+
+
+
 ## [0.0.7-beta.1](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.7-beta.0...@byu-oit/jwt@0.0.7-beta.1) (2023-09-14)
 
 
