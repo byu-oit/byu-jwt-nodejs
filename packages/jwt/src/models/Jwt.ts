@@ -1,7 +1,5 @@
 import { Type, type Static } from '@sinclair/typebox'
-import { createDecoder, createVerifier, type DecoderOptions, type VerifierOptions } from 'fast-jwt'
 import { TypeCompiler } from '@sinclair/typebox/compiler'
-import { ValidationError } from '../util/Errors.js'
 
 export enum KeyType {
   PRD = 'PRODUCTION',
@@ -90,8 +88,7 @@ export class JwtHeader {
     const C = TypeCompiler.Compile(JwtHeader.Schema)
     const result = C.Check(value)
     if (!result) {
-      const errors = [...C.Errors(value)]
-      throw new ValidationError(errors, 'Invalid JWT Header')
+      throw new Error('Invalid JWT Header')
     }
     return new JwtHeader(value)
   }
@@ -195,42 +192,8 @@ export class JwtPayload {
     const C = TypeCompiler.Compile(JwtPayload.Schema)
     const result = C.Check(value)
     if (!result) {
-      const errors = [...C.Errors(value)]
-      throw new ValidationError(errors, 'Invalid JWT Payload')
+      throw new Error('Invalid JWT Payload')
     }
     return new JwtPayload(value)
-  }
-}
-
-export interface CompleteJwt {
-  header: unknown
-  payload: unknown
-  signature: string
-  input: string
-}
-
-export class Jwt {
-  header: JwtHeader
-  payload: JwtPayload
-  signature: string
-  input: string
-
-  constructor (completeJwt: CompleteJwt) {
-    this.header = JwtHeader.from(completeJwt.header)
-    this.payload = JwtPayload.from(completeJwt.payload)
-    this.signature = completeJwt.signature
-    this.input = completeJwt.input
-  }
-
-  static decode (value: string, options?: Partial<DecoderOptions>): Jwt {
-    const opts = { ...options, complete: true }
-    const decode = createDecoder(opts)
-    return new Jwt(decode(value))
-  }
-
-  static verify (value: string, key: string, options?: Partial<VerifierOptions>): Jwt {
-    const opts = { ...options, complete: true, key }
-    const verify = createVerifier(opts)
-    return new Jwt(verify(value))
   }
 }

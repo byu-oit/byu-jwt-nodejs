@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.7-beta.3](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.7-beta.2...@byu-oit/fastify-jwt@0.1.7-beta.3) (2023-09-25)
+
+
+### Bug Fixes
+
+* update dependencies ([#157](https://github.com/byu-oit/byu-jwt-nodejs/issues/157)) ([1a3229c](https://github.com/byu-oit/byu-jwt-nodejs/commit/1a3229c1e8e6baaee03ee29946a7a1d29f5009c6))
+
+
+
+
+
+## [0.1.7-beta.2](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.7-beta.1...@byu-oit/fastify-jwt@0.1.7-beta.2) (2023-09-18)
+
+
+### Bug Fixes
+
+* **fastify:** flatten ByuJwtAuthenticator options ([#156](https://github.com/byu-oit/byu-jwt-nodejs/issues/156)) ([b611bd0](https://github.com/byu-oit/byu-jwt-nodejs/commit/b611bd0d9584efce2e0ec19ac43bbf41a2174cea))
+
+
+
+
+
+## [0.1.7-beta.1](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.7-beta.0...@byu-oit/fastify-jwt@0.1.7-beta.1) (2023-09-14)
+
+
+### Bug Fixes
+
+* update dependencies ([#155](https://github.com/byu-oit/byu-jwt-nodejs/issues/155)) ([e20663e](https://github.com/byu-oit/byu-jwt-nodejs/commit/e20663ecfd7c6c42a09ee48fa272fee85e694cfb))
+
+
+
+
+
+## [0.1.7-beta.0](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.6...@byu-oit/fastify-jwt@0.1.7-beta.0) (2023-09-11)
+
+**Note:** Version bump only for package @byu-oit/fastify-jwt
+
+
+
+
+
 ## [0.1.6](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.1.5...@byu-oit/fastify-jwt@0.1.6) (2023-07-10)
 
 
