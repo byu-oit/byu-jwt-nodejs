@@ -2,8 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "declarationDir": "types",
-    "outDir": "esm",
+    "declarationDir": "dist/esm",
+    "outDir": "dist/esm",
     "lib": ["ES2022"]
   },
   "include": [
