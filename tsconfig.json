@@ -1,13 +1,12 @@
 {
-  "extends": "@tsconfig/esm/tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "strictNullChecks": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "importHelpers": true,
-    "strictNullChecks": true,
     "lib": [
       "DOM",
       "ES2022"
@@ -15,5 +14,9 @@
   },
   "include": [
     "packages/*/src"
+  ],
+  "references": [
+    { "path": "./packages/jwt" },
+    { "path": "./packages/fastify" }
   ]
 }
