@@ -75,11 +75,11 @@
     "files": [
       "test/**/*.spec.ts"
     ],
-    "extensions": {
-      "ts": "module"
-    },
+    "extensions": [
+      "ts"
+    ],
     "nodeArguments": [
-      "--loader=tsx"
+      "--import=tsx"
     ]
   },
   "gitHead": "30a83736206e818425de257166a3586384d528dd"
