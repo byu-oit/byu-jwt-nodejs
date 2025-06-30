@@ -43,7 +43,7 @@
     "@byu-oit-sdk/jwt": "^0.1.0",
     "@byu-oit/jwt": "^0.0.8",
     "@sinclair/typebox": "^0.31.2",
-    "@types/node": "^18.16.2",
+    "@types/node": "^24.0.7",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0"
   },
