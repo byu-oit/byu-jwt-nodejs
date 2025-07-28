@@ -1,4 +1,5 @@
-import test from 'ava'
+import test from 'node:test'
+import assert from 'node:assert'
 import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify'
 import ByuJwtProvider, { type ByuJwtError } from '../src/index.js'
 import { expiredJwt, decodedJwt } from './assets/jwt.js'
@@ -16,7 +17,7 @@ test('authenticated user', async t => {
   await fastify.register(ByuJwtProvider, { issuer, development })
   fastify.get('/', (request) => request.caller)
   const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
-  t.is(result.netId, 'stuft2')
+  assert.strictEqual(result.netId, 'stuft2')
 })
 
 test('cannot fetch key', async t => {
@@ -24,7 +25,7 @@ test('cannot fetch key', async t => {
   await fastify.register(ByuJwtProvider, { issuer, basePath: '/test' })
   fastify.get('/', (request) => request.caller)
   const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
-  t.is(result.message, 'Cannot fetch key.')
+  assert.strictEqual(result.message, 'Cannot fetch key.')
 })
 
 test('missing expected JWT', async t => {
@@ -33,19 +34,19 @@ test('missing expected JWT', async t => {
   await fastify.register(ByuJwtProvider, { issuer, development })
   fastify.get('/', () => true)
   const result = await fastify.inject('/').then(res => res.json<ByuJwtError>())
-  t.is(result.message, 'Missing expected JWT')
+  assert.strictEqual(result.message, 'Missing expected JWT')
 })
 
 test('invalid API context in JWT', async t => {
   const validate = apiContextValidationFunction('/test')
-  t.throws(() => {
+  assert.throws(() => {
     validate(decodedJwt)
   }, { instanceOf: Error, message: 'Invalid API context in JWT' })
 })
 
 test('invalid audience in JWT', async t => {
   const validate = apiContextValidationFunction('/echo')
-  t.throws(() => {
+  assert.throws(() => {
     validate(decodedJwt)
   }, { instanceOf: Error, message: 'Invalid aud in JWT' })
 })
