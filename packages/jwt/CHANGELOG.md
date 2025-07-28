@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.8...@byu-oit/jwt@0.1.1) (2025-07-28)
+
+
+### Bug Fixes
+
+* update jwt dep to fix npm audit issue ([#175](https://github.com/byu-oit/byu-jwt-nodejs/issues/175)) ([dfa1948](https://github.com/byu-oit/byu-jwt-nodejs/commit/dfa1948cf64dcfe3c515b041e647623d8319317e))
+
+
+
+
+
 ## [0.0.8](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/jwt@0.0.7...@byu-oit/jwt@0.0.8) (2025-06-23)
 
 
