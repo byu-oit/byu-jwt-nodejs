@@ -1,9 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert'
 import Fastify, { type FastifyReply, type FastifyRequest } from 'fastify'
-import ByuJwtProvider, { type ByuJwtError } from '../src/index.js'
+import ByuJwtProvider, { apiContextValidationFunction, ByuJwtError, BYU_JWT_ERROR_CODES } from '../src/index.js'
 import { expiredJwt, decodedJwt } from './assets/jwt.js'
-import { apiContextValidationFunction } from '../src/index.js'
 
 const issuer = 'https://example.com'
 const development = true
@@ -39,16 +38,18 @@ test('missing expected JWT', async t => {
 
 test('invalid API context in JWT', async t => {
   const validate = apiContextValidationFunction('/test')
+  const Error = new ByuJwtError(BYU_JWT_ERROR_CODES.invalidApiContext, 'Invalid API context in JWT')
   assert.throws(() => {
     validate(decodedJwt)
-  }, { instanceOf: Error, message: 'Invalid API context in JWT' })
+  }, Error)
 }).catch((e) => { console.error(e) })
 
 test('invalid audience in JWT', async t => {
   const validate = apiContextValidationFunction('/echo')
+  const Error = new ByuJwtError(BYU_JWT_ERROR_CODES.invalidAudience, 'Invalid aud in JWT')
   assert.throws(() => {
     validate(decodedJwt)
-  }, { instanceOf: Error, message: 'Invalid aud in JWT' })
+  }, Error)
 }).catch((e) => { console.error(e) })
 
 test.todo('will return original instead of current').catch((e) => { console.error(e) })

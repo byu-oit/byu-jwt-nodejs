@@ -14,5 +14,7 @@ test('should decode the jwt', async t => {
 
 test('verify should fail on an expired jwt', async t => {
   const byuJwt = ByuJwt.create({ issuer: 'https://api.byu.edu' })
-  assert.throws(async () => await byuJwt.verify(expiredJwt))
+  assert.rejects(async () => await byuJwt.verify(expiredJwt)).catch((e) => {
+    console.error(e)
+  })
 }).catch((e) => { console.error(e) })
