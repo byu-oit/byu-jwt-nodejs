@@ -18,7 +18,7 @@ test('authenticated user', async t => {
   fastify.get('/', (request) => request.caller)
   const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
   assert.strictEqual(result.netId, 'stuft2')
-})
+}).catch((e) => { console.error(e) })
 
 test('cannot fetch key', async t => {
   const fastify = Fastify()
@@ -26,7 +26,7 @@ test('cannot fetch key', async t => {
   fastify.get('/', (request) => request.caller)
   const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
   assert.strictEqual(result.message, 'Cannot fetch key.')
-})
+}).catch((e) => { console.error(e) })
 
 test('missing expected JWT', async t => {
   const fastify = Fastify()
@@ -35,20 +35,20 @@ test('missing expected JWT', async t => {
   fastify.get('/', () => true)
   const result = await fastify.inject('/').then(res => res.json<ByuJwtError>())
   assert.strictEqual(result.message, 'Missing expected JWT')
-})
+}).catch((e) => { console.error(e) })
 
 test('invalid API context in JWT', async t => {
   const validate = apiContextValidationFunction('/test')
   assert.throws(() => {
     validate(decodedJwt)
   }, { instanceOf: Error, message: 'Invalid API context in JWT' })
-})
+}).catch((e) => { console.error(e) })
 
 test('invalid audience in JWT', async t => {
   const validate = apiContextValidationFunction('/echo')
   assert.throws(() => {
     validate(decodedJwt)
   }, { instanceOf: Error, message: 'Invalid aud in JWT' })
-})
+}).catch((e) => { console.error(e) })
 
-test.todo('will return original instead of current')
+test.todo('will return original instead of current').catch((e) => { console.error(e) })
