@@ -32,8 +32,8 @@
     "clean": "rimraf esm cjs types",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "test": "node --test",
-    "test:coverage": "node --test --test-reporter=spec --test-reporter-destination=stdout --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info"
+    "test": "node --test \"test\/**\/*.spec.ts\"",
+    "test:coverage": "node --test --test-reporter=spec --test-reporter-destination=stdout --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info \"test\/**\/*.spec.ts\""
   },
   "bugs": {
     "url": "https://github.com/byu-oit/byu-jwt-nodejs/issues"
