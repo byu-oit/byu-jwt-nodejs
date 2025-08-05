@@ -7,7 +7,7 @@
 ```javascript
 import { ByuJwt } from '@byu-oit/jwt'
 
-const byuJwt = new ByuJwt({ issuer: 'https://api.byu.edu' })
+const byuJwt = ByuJwt.create({ issuer: 'https://api.byu.edu' })
 
 const jwt = byuJwt.verify('[your jwt]')
 
