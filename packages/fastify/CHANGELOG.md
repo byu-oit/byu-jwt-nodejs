@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.3.4...@byu-oit/fastify-jwt@0.3.5) (2026-04-06)
+
+
+### Bug Fixes
+
+* remove old fast-jwt references ([#197](https://github.com/byu-oit/byu-jwt-nodejs/issues/197)) ([c702dea](https://github.com/byu-oit/byu-jwt-nodejs/commit/c702dea95e32aecebde702afe0e51a88398dc39e))
+
+
+
+
+
 ## [0.3.4](https://github.com/byu-oit/byu-jwt-nodejs/compare/@byu-oit/fastify-jwt@0.3.3...@byu-oit/fastify-jwt@0.3.4) (2026-04-06)
 
 
