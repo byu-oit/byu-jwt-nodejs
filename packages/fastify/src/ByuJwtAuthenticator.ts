@@ -1,5 +1,4 @@
 import { ByuJwt, type JwtPayload, type CreateByuJwtOptions, type TransformedJwtPayload } from '@byu-oit/jwt'
-import { TokenError } from 'fast-jwt'
 import { type IncomingHttpHeaders } from 'http'
 import { BYU_JWT_ERROR_CODES, ByuJwtError } from './ByuJwtError.js'
 
@@ -36,15 +35,8 @@ export class ByuJwtAuthenticator {
     const [original, current] = await Promise.all(JwtHeaders.map(async header => {
       const jwt = headers[header]
       if (typeof jwt !== 'string') return undefined
-      try {
-        const { payload } = this.development ? this.ByuJwt.decode(jwt) : await this.ByuJwt.verify(jwt)
-        return payload
-      } catch (e) {
-        if (e instanceof TokenError) {
-          throw ByuJwtError.wrap(e)
-        }
-        throw e
-      }
+      const { payload } = this.development ? this.ByuJwt.decode(jwt) : await this.ByuJwt.verify(jwt)
+      return payload
     }))
 
     if (current == null) {
