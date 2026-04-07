@@ -24,7 +24,7 @@ test('cannot fetch key', async t => {
   await fastify.register(ByuJwtProvider, { issuer, basePath: '/test' })
   fastify.get('/', (request) => request.caller)
   const result = await fastify.inject({ url: '/', headers: { 'x-jwt-assertion': expiredJwt } }).then(res => res.json())
-  assert.strictEqual(result.message, 'Cannot fetch key.')
+  assert.strictEqual(result.message, 'fetch failed')
 }).catch((e) => { console.error(e) })
 
 test('missing expected JWT', async t => {
